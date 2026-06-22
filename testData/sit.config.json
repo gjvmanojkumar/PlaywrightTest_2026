@@ -1,0 +1,24 @@
+{
+    "letsShopWebURL": "https://rahulshettyacademy.com/client/#/auth/login",
+    "eventHubWebURL": "https://eventhub.rahulshettyacademy.com/",
+    "users": {
+        "user1": {
+            "userName": "bruceWayne@gmail.com",
+            "password": "BruceWayne123"
+        },
+        "user2": {
+            "userName": "bruceWayne@gmail.com",
+            "password": "BruceWayne123@"
+        },
+        "user3": {
+            "userName": "bruceWayne1@gmail.com",
+            "password": "BruceWayne123@"
+        }
+    },
+    "apiURLs": {
+        "loginPageURL": "https://rahulshettyacademy.com/api/ecom/auth/login",
+        "getOrderDetails": "https://rahulshettyacademy.com/api/ecom/order/get-orders-details?id=",
+        "eventHubLoginURL": "https://api.eventhub.rahulshettyacademy.com/api/auth/login",
+        "eventHubOrderURL": "https://api.eventhub.rahulshettyacademy.com/api/events"
+    }
+}
