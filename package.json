@@ -21,6 +21,8 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@azure/identity": "^4.13.1",
+    "@azure/playwright": "^1.1.6",
     "@playwright/test": "^1.58.1",
     "@types/luxon": "^3.7.1",
     "@types/node": "^25.9.1",
