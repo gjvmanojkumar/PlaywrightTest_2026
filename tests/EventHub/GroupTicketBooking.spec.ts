@@ -4,7 +4,7 @@ const eventTitle = `Yoga Workshop`
 const ticketCount: number = 3
 let refID: string = ''
 test.describe.configure({ mode: 'serial' })
-test.describe('Verify Group Tickets Booking Is Not Eligible For Refund', () => {
+test.describe('Verify Group Tickets Booking Is Not Eligible For Refund @EventHub', () => {
     test.beforeEach('Login', async ({ loginBookEvent }) => {
         await loginBookEvent.navigateToURL()
         await loginBookEvent.login()

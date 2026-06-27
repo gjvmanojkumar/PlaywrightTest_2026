@@ -6,7 +6,7 @@ let totalSeats: string = '50'
 let token: string = ""
 
 test.describe.configure({ mode: 'serial' })
-test.describe('Book An Event', () => {
+test.describe('Book An Event', { tag: ['@EventHub', '@Regression'] }, () => {
 
     test.beforeAll(async ({ apiRequest }) => {
         token = await apiRequest.loginAPIRequestEventHub(data.users.user3.userName, data.users.user3.password)

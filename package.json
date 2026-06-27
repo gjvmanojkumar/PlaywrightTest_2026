@@ -14,13 +14,16 @@
     "web_regression": "npx playwright test",
     "letsShop_PlaceOrder": "npx playwright test OrderProductTest",
     "bookAnEvent_test": "npx playwright test CreateAnEventTest",
-    "EventBookingAPI_test": "npx playwright test EventBookingAPI"
+    "EventBookingAPI_test": "npx playwright test EventBookingAPI",
+    "OnlyEventHubTests_Regression": "npx playwright test --grep @EventHub"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@azure/identity": "^4.13.1",
+    "@azure/playwright": "^1.1.6",
     "@playwright/test": "^1.58.1",
     "@types/luxon": "^3.7.1",
     "@types/node": "^25.9.1",
