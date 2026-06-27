@@ -10,3 +10,6 @@ allure-report/
 allure-results/
 playwright-report/
 specs
+playwright.config.ts
+package-lock.json
+package.json
