@@ -15,7 +15,8 @@
     "letsShop_PlaceOrder": "npx playwright test OrderProductTest",
     "bookAnEvent_test": "npx playwright test CreateAnEventTest",
     "EventBookingAPI_test": "npx playwright test EventBookingAPI",
-    "OnlyEventHubTests_Regression": "npx playwright test --grep @EventHub"
+    "OnlyEventHubTests_Regression": "npx playwright test --grep @EventHub",
+    "AzureTestsRegression": "npx playwright test --config=playwright.service.config.ts --workers=4"
   },
   "keywords": [],
   "author": "",
