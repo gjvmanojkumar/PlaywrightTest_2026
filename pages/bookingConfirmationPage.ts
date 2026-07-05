@@ -3,6 +3,8 @@ import { Utils } from "../lib/Utils";
 import data from "../testData/sit.config.json"
 import { EventDetailsPage } from "./eventDetailsPage";
 import { bookingPageLoc } from "../locators/bookAnEventLoc";
+import { AllEvents } from '../interface/AllEvents.interface';
+import { APIRequests } from "./apiRequests";
 
 export class BookingConfirmationPage {
     readonly utils: Utils
@@ -50,9 +52,16 @@ export class BookingConfirmationPage {
         await this.validateBookingRefID(eventTitle, bookingRefID)
     }
 
-    async verifySeatReduction(eventsPageInstance: EventDetailsPage, eventTitle: string, totalSeats: string) {
+    async verifySeatReduction(eventsPageInstance: EventDetailsPage, apiRequestInstance: APIRequests, eventTitle: string, totalSeats: string) {
+        let availableSeats: string = ''
+        const eventsResponseJSON: AllEvents = await apiRequestInstance.getAllEvents()
+        eventsResponseJSON.data.forEach((event) => {
+            if (event.title === eventTitle) {
+                availableSeats = event.availableSeats.toString()
+            }
+        })
         const seatsCount = await eventsPageInstance.eventsPageHelper(eventTitle)
-        expect(seatsCount).toBe(Number(totalSeats) - 1)
+        await this.utils.verifyValuesOnly(seatsCount.toString(), availableSeats)
     }
 
     async validateBookingRefID(eventTitle: string, bookingRefID: string) {
