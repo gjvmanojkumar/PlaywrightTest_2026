@@ -30,6 +30,7 @@ export class EventDetailsPage {
     }
 
     async eventsPageHelper(eventTitle: string) {
+        await this.utils.waitForPageToLoad('load')
         await this.utils.clickEle(eventsPageLoc.eventsPageNavLoc)
         const allEvents: Locator = await this.utils.findLocator(eventsPageLoc.eventCardLoc)
         await allEvents.first().isVisible()
