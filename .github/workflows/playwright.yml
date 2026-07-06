@@ -21,7 +21,6 @@ jobs:
 
     #- name: Install Playwright Browsers
     #  run: npx playwright install --with-deps
-    # Sample commit and revert to test the workflow
 
     - name: Azure Login
       uses: azure/login@v3
