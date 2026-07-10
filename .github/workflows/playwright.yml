@@ -34,7 +34,7 @@ jobs:
         PLAYWRIGHT_SERVICE_URL: ${{ vars.PLAYWRIGHT_SERVICE_URL }}
       run: npx playwright test --config=playwright.service.config.ts --workers=4
       
-    - uses: actions/upload-artifact@v4.6.2+
+    - uses: actions/upload-artifact@v6
       if: ${{ !cancelled() }}
       with:
         name: playwright-report
