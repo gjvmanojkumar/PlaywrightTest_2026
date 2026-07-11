@@ -2,12 +2,15 @@ name: Playwright Tests
 on:
   push:
     branches: [ main, master ]
+    branches-ignore: AutomatingEventHub
   pull_request:
     types:
       - closed
     branches:
       - main
       - master
+    paths-ignore:
+      - "/Users/manojkanchana/PlaywrightTest_2026/.github/*"  #this will ignore triggering the event when a PR is raised just to update .github files (Here it's .yml)
   workflow_dispatch:
 
 jobs:
