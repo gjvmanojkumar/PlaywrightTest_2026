@@ -3,7 +3,11 @@ on:
   push:
     branches: [ main, master ]
   pull_request:
-    branches: [ main, master ]
+    types:
+      - closed
+    branches: 
+      - main
+      - master
   workflow_dispatch:
 
 jobs:
@@ -13,7 +17,9 @@ jobs:
     strategy:
       fail-fast: true
     steps:
-    - uses: actions/checkout@v4
+    - name: "Checkout latest code"
+      uses: actions/checkout@v4
+      
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
