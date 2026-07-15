@@ -2,41 +2,77 @@ name: Playwright Tests
 on:
   push:
     branches: [ main, master ]
+    branches-ignore: AutomatingEventHub
   pull_request:
-    branches: [ main, master ]
+    types:
+      - closed
+    branches:
+      - main
+      - master
+    paths-ignore:
+      - "/Users/manojkanchana/PlaywrightTest_2026/.github/*"  #this will ignore triggering the event when a PR is raised just to update .github files (Here it's .yml)
   workflow_dispatch:
 
 jobs:
-  test:
+  set-up:
     timeout-minutes: 60
     runs-on: ubuntu-latest #macos-latest #windows-latest
     strategy:
       fail-fast: true
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
+      - name: "Checkout latest code"
+        uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: npm ci
+      - name: "Caching dependencies"
+        uses: actions/cache@v6
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
 
-    #- name: Install Playwright Browsers
-    #  run: npx playwright install --with-deps
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
 
-    - name: Azure Login
-      uses: azure/login@v3
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Run Playwright tests
-      env:
-        PLAYWRIGHT_SERVICE_URL: ${{ vars.PLAYWRIGHT_SERVICE_URL }}
-      run: npx playwright test --config=playwright.service.config.ts --workers=4
-      
-    - uses: actions/upload-artifact@v6
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
+      #- name: Install Playwright Browsers
+      #  run: npx playwright install --with-deps
+
+  test:
+    needs: set-up
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout latest code"
+        uses: actions/checkout@v4
+
+        # Although we added caching deps here as well and other dependencies below. That doesn't mean all deps will be installed again, here system will use a central cache across workflows.
+      - name: "Caching dependencies"
+        uses: actions/cache@v6
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Azure Login
+        uses: azure/login@v3
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Run Playwright tests
+        env:
+          PLAYWRIGHT_SERVICE_URL: ${{ vars.PLAYWRIGHT_SERVICE_URL }}
+        run: npx playwright test --config=playwright.service.config.ts --workers=4
+
+      - uses: actions/upload-artifact@v6
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 5
