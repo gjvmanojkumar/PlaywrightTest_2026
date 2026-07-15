@@ -32,6 +32,6 @@ test.describe('Book An Event', { tag: ['@EventHub', '@Regression'] }, () => {
         for (const context of contexts) {
             await context.close();
         }
-        console.log('✅ All browser contexts closed.');
+        console.log('✅ All browser contexts closed. Just random update');
     })
 })
