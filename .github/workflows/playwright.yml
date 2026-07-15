@@ -23,6 +23,12 @@ jobs:
       - name: "Checkout latest code"
         uses: actions/checkout@v4
 
+      - name: "Caching dependencies"
+        uses: actions/cache@v6
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
@@ -37,6 +43,23 @@ jobs:
     needs: set-up
     runs-on: ubuntu-latest
     steps:
+      - name: "Checkout latest code"
+        uses: actions/checkout@v4
+
+        # Although we added caching deps here as well and other dependencies below. That doesn't mean all deps will be installed again, here system will use a central cache across workflows.
+      - name: "Caching dependencies"
+        uses: actions/cache@v6
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Azure Login
         uses: azure/login@v3
         with:
