@@ -81,14 +81,14 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 5
-          
+
   # Dummy deploy to reuse another workflow - using 'uses' and the relative path to the reusable YAML file.
   deploy:
     needs: test
     uses: ./.github/workflows/reusableWorkflow.yml
 
   report:
-    needs: [set-up, test]
+    needs: [set-up, test, deploy]
     if: ${{ failure() }}
     runs-on: ubuntu-latest
     steps:
