@@ -11,6 +11,7 @@ export class EventsPage {
     }
 
     async selectEventCard(eventDetails: CreateEvent) {
+        //Dummy push
         await this.utils.clickEle(eventsPageLoc.eventsPageNavLoc)
         let actualSeatsCount = await this.utils.element(eventsPageLoc.eventCardLoc).filter(eventDetails.title).locator(eventsPageLoc.seatsAvailableLoc).innerText()
         await this.utils.element(eventsPageLoc.eventCardLoc).filter(eventDetails.title).role("link", "Book Now").click()

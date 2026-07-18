@@ -1,7 +1,5 @@
 name: Playwright Tests
 on:
-  push:
-    branches: [ main, master ]
   pull_request:
     types:
       - closed
@@ -24,15 +22,18 @@ jobs:
 
       - name: "Caching dependencies"
         uses: actions/cache@v6
+        id: cache
         with:
-          path: ~/.npm
+          path: node_modules #~/.npm
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
 
       - uses: actions/setup-node@v4
+        if: steps.cache.outputs.cache-hit != 'true'
         with:
           node-version: lts/*
 
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
       #- name: Install Playwright Browsers
@@ -47,16 +48,19 @@ jobs:
 
         # Although we added caching deps here as well and other dependencies below. That doesn't mean all deps will be installed again, here system will use a central cache across workflows.
       - name: "Caching dependencies"
+        id: cache
         uses: actions/cache@v6
         with:
-          path: ~/.npm
+          path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
 
       - uses: actions/setup-node@v4
+        if: steps.cache.outputs.cache-hit != 'true'
         with:
           node-version: lts/*
 
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Azure Login
@@ -75,3 +79,12 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 5
+
+  report:
+    needs: [set-up, test]
+    if: ${{ failure() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        run: |
+          echo "Deploying ${{ toJson(github) }}"
