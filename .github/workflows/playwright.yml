@@ -82,6 +82,7 @@ jobs:
 
   report:
     needs: [set-up, test]
+    if: ${{ failure() }}
     runs-on: ubuntu-latest
     steps:
       - name: Deploy
