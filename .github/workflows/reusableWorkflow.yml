@@ -1,8 +1,21 @@
 name: Deploy
-on: workflow_call   #We use workflow_call to make this workflow accessible in another workflows
+on:  #We use workflow_call to make this workflow accessible in another workflows
+    workflow_call:
+        inputs:
+            artifact_name:
+                description: The name of the deployable artifact file
+                required: false
+                default: dist
+                type: string
 jobs:
     deploy:
         runs-on: ubuntu-latest
         steps:
+            - name: Get Code
+              uses: actions/download-artifact@v6
+              with:
+                name: ${{ inputs.artifact_name }}
+            - name: List Files
+              run: ls
             - name: Output info
               run: echo "Deploying..."

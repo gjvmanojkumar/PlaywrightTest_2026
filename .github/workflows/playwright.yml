@@ -86,6 +86,8 @@ jobs:
   deploy:
     needs: test
     uses: ./.github/workflows/reusableWorkflow.yml
+    with:
+      artifact_name: playwright-report
 
   report:
     needs: [set-up, test, deploy]
