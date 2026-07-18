@@ -59,7 +59,7 @@ jobs:
       - uses: actions/setup-node@v4
         if: steps.cache.outputs.cache-hit != 'true'
         with:
-          node-version: lts/*
+          node-version: ${{ matrix.node_versions }}
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
