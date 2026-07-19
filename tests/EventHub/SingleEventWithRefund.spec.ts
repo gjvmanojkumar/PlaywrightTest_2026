@@ -22,7 +22,7 @@ test.describe('Verify Event Eligible for Refund @EventHub', () => {
             await bookingConfirmationPage.fillBookingForm(eventTitle)
             refID = await bookingConfirmationPage.verifyBookingConfirmation()
         })
-        
+
         await test.step('Verify Refund Eligibility', async () => {
             await bookingConfirmationPage.verifyInMyBooking(refID, eventTitle)
             await bookingConfirmationPage.verifyRefundEligibility(refID, ticketCount)

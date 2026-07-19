@@ -2,6 +2,7 @@ import { BrowserContext, expect, Page, test } from "@playwright/test";
 
 let webContext: BrowserContext;
 
+/*
 test.beforeAll(async ({ browser }) => {
     const context = await browser.newContext()
     const page = await context.newPage()
@@ -16,6 +17,7 @@ test.beforeAll(async ({ browser }) => {
     webContext = await browser.newContext({ storageState: 'state.json' })
 
 })
+
 test.skip('Sample Test', { tag: '@slow' }, async () => {
     const page = await webContext.newPage()
 
@@ -31,7 +33,7 @@ test.skip('Sample Test', { tag: '@slow' }, async () => {
     const productTitles: string[] = await cardBodyLoc.allTextContents()
     console.log(productTitles);
 })
-
+*/
 test.skip('UI Elements Validation', async ({ browser }) => {
     const context = await browser.newContext()
     const page = await context.newPage()

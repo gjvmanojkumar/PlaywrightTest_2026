@@ -1,8 +1,8 @@
 import { test } from '../../lib/fixture'
 import data from '../../testData/sit.config.json'
 
-const eventTitle = `Test Event ${Date.now()}`
-let totalSeats: string = '50'
+const eventTitle = `Tech Summit 2026`
+let totalSeats: string = '500'
 let token: string = ""
 
 test.describe.configure({ mode: 'serial' })
