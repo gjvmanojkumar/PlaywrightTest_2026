@@ -1,6 +1,6 @@
 import { test } from '../../lib/fixture';
 
-const eventTitle = `Test Event 1782990321302`
+const eventTitle = `Tech Summit 2026`
 const ticketCount: number = 3
 let refID: string = ''
 test.describe.configure({ mode: 'serial' })
