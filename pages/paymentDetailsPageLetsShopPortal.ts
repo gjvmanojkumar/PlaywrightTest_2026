@@ -17,7 +17,7 @@ export class PaymentDetailsPage {
 
     apiRequest = new APIRequests()
 
-    async verifyPlaceOrder(country: string): Promise<string> {
+    async verifyPlaceOrder(authToken: string, country: string): Promise<string> {
         await this.utils.enterEleText(OrderProductLocators.nameOnCard, 'Gopal')
         await this.utils.enterEleTextSequentially(OrderProductLocators.selectCountry, 'Ind')
         await this.utils.selectValueByText(OrderProductLocators.countryOptions, country, country)
@@ -28,7 +28,7 @@ export class PaymentDetailsPage {
         this.orderID = id[2]
 
         // Get Product Name from the API and Assert in the Success Page
-        const orderDetails: orderDetails = await this.apiRequest.getOrderDetails(data.apiURLs.getOrderDetails+this.orderID)
+        const orderDetails: orderDetails = await this.apiRequest.getOrderDetails(authToken, data.apiURLs.getOrderDetails+this.orderID)
         const productName = orderDetails.data.productName
         this.utils.verifyEleContainsText(OrderProductLocators.productTitle, productName)
         return this.orderID

@@ -12,12 +12,12 @@ export class APIRequests {
     placeOrderAuthToken: string = ''
     eventsAuthToken: string = ''
 
-    private async getRequest(endpoint: string) {
+    private async getRequest(endpoint: string, authToken: string) {
         const apiContext: APIRequestContext = await request.newContext()
         const apiResponse: APIResponse = await apiContext.get(endpoint, {
             headers: {
                 'Content-Type': APIData['content-type'],
-                'Authorization': this.placeOrderAuthToken
+                'Authorization': authToken
             }
         })
         return apiResponse
@@ -57,8 +57,8 @@ export class APIRequests {
         return this.placeOrderAuthToken
     }
 
-    async getOrderDetails(endpoint: string) {
-        const orderDetailsResponse: APIResponse = await this.getRequest(endpoint)
+    async getOrderDetails(authToken: string, endpoint: string) {
+        const orderDetailsResponse: APIResponse = await this.getRequest(endpoint, authToken)
         const orderDetailsResponseJSON: orderDetails = await orderDetailsResponse.json()
         await expect(orderDetailsResponse).toBeOK()
         return orderDetailsResponseJSON
