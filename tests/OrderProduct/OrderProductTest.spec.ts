@@ -27,7 +27,7 @@ test.describe('Place An Order', () => {
             await productsPage.selectAProduct(productName)
         })
         await test.step('Payment Details Page', async () => {
-            orderID = await paymentDetailsPage.verifyPlaceOrder(country)
+            orderID = await paymentDetailsPage.verifyPlaceOrder(token, country)
         })
         await test.step('Validate Order Details', async () => {
             await orderSuccessPage.verifyOrderDetails(orderID)
