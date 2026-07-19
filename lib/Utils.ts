@@ -130,6 +130,7 @@ export class Utils {
     // Use to verify element matched partial text
     async verifyEleContainsText(locator: string, text: string): Promise<void> {
         await this.waitForEleAttached(locator)
+        await this.page.locator(locator).waitFor({state: 'visible'})
         await expect(this.page.locator(locator)).toContainText(text)
     }
 

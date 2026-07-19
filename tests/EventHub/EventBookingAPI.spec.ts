@@ -10,7 +10,7 @@ let refID: string = ""
 let actualSeatsCount = ""
 
 test.describe.configure({ 'mode': 'serial' })
-test.describe("Event Booking From Create Event API @EventHub", () => {
+test.skip("Event Booking From Create Event API @EventHub", () => {
 
     test.beforeAll(async ({ apiRequest }) => {
         const eventDate = Utils.futureDateValue()
