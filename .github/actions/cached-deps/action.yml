@@ -1,0 +1,24 @@
+name: 'Get & Cache Dependecies'
+description: 'Get the dependencies (via npm) and run them'
+runs:
+  using: 'composite'
+  steps:
+    - name: "Caching dependencies"
+      uses: actions/cache@v6
+      id: cache
+      with:
+          path: node_modules #~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+
+    - uses: actions/setup-node@v4
+      if: steps.cache.outputs.cache-hit != 'true'
+      with:
+          node-version: ${{ matrix.node_versions }}
+
+    - name: Install dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: npm ci
+      shell: bash
+
+    #- name: Install Playwright Browsers
+    #  run: npx playwright install --with-deps
