@@ -86,7 +86,7 @@ jobs:
     needs: set-up_test
     uses: ./.github/workflows/reusableWorkflow.yml
     with:
-      artifact_name: playwright-report
+      artifact_name: all-blob-reports #playwright-report
 
   # =======================================================
   # JOB 2: Merge Blob Reports & Send Slack Notification
