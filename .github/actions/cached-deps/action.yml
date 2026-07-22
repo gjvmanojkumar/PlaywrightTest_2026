@@ -26,5 +26,7 @@ runs:
       run: npm ci
       shell: bash
 
-    #- name: Install Playwright Browsers
-    #  run: npx playwright install --with-deps
+    - name: Install Playwright Browsers
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: npx playwright install --with-deps
+      shell: bash
