@@ -25,7 +25,7 @@ on:
       workers:
         description: 'Parallel workers'
         required: true
-        default: '2'
+        default: 4
         type: number
 
 jobs:
