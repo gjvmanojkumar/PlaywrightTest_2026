@@ -98,6 +98,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: "Checkout latest code"
+        uses: actions/checkout@v4
+
       - name: Load & Cache Dependencies #Custom Action Loaded from Local
         uses: ./.github/actions/cached-deps # Path of the Custom Actions repo 
         with:
