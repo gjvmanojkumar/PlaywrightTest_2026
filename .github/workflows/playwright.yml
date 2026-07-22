@@ -25,7 +25,7 @@ on:
       workers:
         description: 'Parallel workers'
         required: true
-        default: 4
+        default: 3
         type: number
 
 jobs:
@@ -35,11 +35,11 @@ jobs:
     strategy:
       # fail-fast: true
       matrix:
-        node_versions: [22, 24]
+        node_versions: [24]
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout latest code"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Load & Cache Dependencies #Custom Action Loaded from Local
         uses: ./.github/actions/cached-deps # Path of the Custom Actions repo 
@@ -54,13 +54,9 @@ jobs:
       - name: Run Playwright tests
         env:
           PLAYWRIGHT_SERVICE_URL: ${{ vars.PLAYWRIGHT_SERVICE_URL }}
-        run: npx playwright test --config=playwright.service.config.ts --workers= ${{ inputs.workers }}
+        run: npx playwright test --config=playwright.service.config.ts --workers= ${{ inputs.workers || 3}}
 
-      - name: Generate Allure Reports
-        if: ${{ inputs.run_allure == 'true' }}
-        run: npm run generate:reports && npm run open-reports
-
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: playwright-report-${{ inputs.test_name }}-${{ github.run_number }}
