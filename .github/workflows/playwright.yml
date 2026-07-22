@@ -70,8 +70,8 @@ jobs:
 
       - name: Run Playwright tests
       #  env:
-      #    PLAYWRIGHT_SERVICE_URL: ${{ vars.PLAYWRIGHT_SERVICE_URL }}
-      #  run: npx playwright test --config=playwright.service.config.ts --workers= ${{ inputs.workers || 3}}
+      #    PLAYWRIGHT_SERVICE_URL: ${{ vars.PLAYWRIGHT_SERVICE_URL 
+      #  run: npx playwright test --config=playwright.service.config.ts --workers= ${{ inputs.workers || 3
         run: npm run ${{ inputs.test_script || 'regression' }} --shard=${{ matrix.shard-index }}/${{ matrix.shard-total }}
 
       - uses: actions/upload-artifact@v4.6.2
