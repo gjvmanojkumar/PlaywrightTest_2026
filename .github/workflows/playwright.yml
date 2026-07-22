@@ -8,7 +8,25 @@ on:
       - master
     paths-ignore:
       - "/Users/manojkanchana/PlaywrightTest_2026/.github/*"  #this will ignore triggering the event when a PR is raised just to update .github files (Here it's .yml)
+  schedule:
+    - cron: '0 0 * * 4'
   workflow_dispatch:
+    inputs:
+      test_name:
+        description: 'Test name to run'
+        required: true
+        default: 'smoke'
+        type: string
+      run_allure:
+        description: 'Generate Allure Report?'
+        required: true
+        default: true
+        type: boolean
+      workers:
+        description: 'Parallel workers'
+        required: true
+        default: '2'
+        type: number
 
 jobs:
   set-up_test:
@@ -25,6 +43,8 @@ jobs:
 
       - name: Load & Cache Dependencies #Custom Action Loaded from Local
         uses: ./.github/actions/cached-deps # Path of the Custom Actions repo 
+        with:
+          caching: 'true'
 
       - name: Azure Login
         uses: azure/login@v3
@@ -34,12 +54,16 @@ jobs:
       - name: Run Playwright tests
         env:
           PLAYWRIGHT_SERVICE_URL: ${{ vars.PLAYWRIGHT_SERVICE_URL }}
-        run: npx playwright test --config=playwright.service.config.ts --workers=4
+        run: npx playwright test --config=playwright.service.config.ts --workers= ${{ inputs.workers }}
+
+      - name: Generate Allure Reports
+        if: ${{ inputs.run_allure == 'true' }}
+        run: npm run generate:reports && npm run open-reports
 
       - uses: actions/upload-artifact@v6
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report
+          name: playwright-report-${{ inputs.test_name }}-${{ github.run_number }}
           path: playwright-report/
           retention-days: 5
 
