@@ -93,7 +93,7 @@ jobs:
   # =======================================================
   report:
     name: Merge Reports & Notify
-    if: !cancelled()
+    if: ${{ !cancelled() }}
     needs: [set-up_test, deploy]
     runs-on: ubuntu-latest
 
