@@ -8,63 +8,43 @@ on:
       - master
     paths-ignore:
       - "/Users/manojkanchana/PlaywrightTest_2026/.github/*"  #this will ignore triggering the event when a PR is raised just to update .github files (Here it's .yml)
+  schedule:
+    - cron: '0 0 * * 4'
   workflow_dispatch:
+    inputs:
+      test_name:
+        description: 'Test name to run'
+        required: true
+        default: 'smoke'
+        type: string
+      run_allure:
+        description: 'Generate Allure Report?'
+        required: true
+        default: true
+        type: boolean
+      workers:
+        description: 'Parallel workers'
+        required: true
+        default: '2'
+        type: number
 
 jobs:
-  set-up:
+  set-up_test:
     timeout-minutes: 60
     continue-on-error: true
     strategy:
       # fail-fast: true
       matrix:
         node_versions: [22, 24]
-    runs-on: ubuntu-latest #macos-latest #windows-latest
-    steps:
-      - name: "Checkout latest code"
-        uses: actions/checkout@v4
-
-      - name: "Caching dependencies"
-        uses: actions/cache@v6
-        id: cache
-        with:
-          path: node_modules #~/.npm
-          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
-
-      - uses: actions/setup-node@v4
-        if: steps.cache.outputs.cache-hit != 'true'
-        with:
-          node-version: ${{ matrix.node_versions }}
-
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
-
-      #- name: Install Playwright Browsers
-      #  run: npx playwright install --with-deps
-
-  test:
-    needs: set-up
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout latest code"
         uses: actions/checkout@v4
 
-        # Although we added caching deps here as well and other dependencies below. That doesn't mean all deps will be installed again, here system will use a central cache across workflows.
-      - name: "Caching dependencies"
-        id: cache
-        uses: actions/cache@v6
+      - name: Load & Cache Dependencies #Custom Action Loaded from Local
+        uses: ./.github/actions/cached-deps # Path of the Custom Actions repo 
         with:
-          path: node_modules
-          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
-
-      - uses: actions/setup-node@v4
-        if: steps.cache.outputs.cache-hit != 'true'
-        with:
-          node-version: ${{ matrix.node_versions }}
-
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
+          caching: 'true'
 
       - name: Azure Login
         uses: azure/login@v3
@@ -74,24 +54,28 @@ jobs:
       - name: Run Playwright tests
         env:
           PLAYWRIGHT_SERVICE_URL: ${{ vars.PLAYWRIGHT_SERVICE_URL }}
-        run: npx playwright test --config=playwright.service.config.ts --workers=4
+        run: npx playwright test --config=playwright.service.config.ts --workers= ${{ inputs.workers }}
+
+      - name: Generate Allure Reports
+        if: ${{ inputs.run_allure == 'true' }}
+        run: npm run generate:reports && npm run open-reports
 
       - uses: actions/upload-artifact@v6
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report
+          name: playwright-report-${{ inputs.test_name }}-${{ github.run_number }}
           path: playwright-report/
           retention-days: 5
 
   # Dummy deploy to reuse another workflow - using 'uses' and the relative path to the reusable YAML file.
   deploy:
-    needs: test
+    needs: set-up_test
     uses: ./.github/workflows/reusableWorkflow.yml
     with:
       artifact_name: playwright-report
 
   report:
-    needs: [set-up, test, deploy]
+    needs: [set-up_test, deploy]
     if: ${{ failure() }}
     runs-on: ubuntu-latest
     steps:
