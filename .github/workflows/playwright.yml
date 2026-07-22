@@ -27,8 +27,23 @@ on:
         required: true
         default: 3
         type: number
+      test_script:
+        description: 'Test script to run'
+        required: true
+        default: 'regression'
+        type: choice
+        options:
+          - regression
+          - letsShop_PlaceOrder
+          - bookAnEvent_test
+          - singleEventWithRefund_test
+          - groupTicketBooking_test
 
 jobs:
+
+  # =======================================================
+  # JOB 1: Run Playwright Tests in Parallel Shards
+  # =======================================================
   set-up_test:
     timeout-minutes: 60
     continue-on-error: true
@@ -36,10 +51,12 @@ jobs:
       # fail-fast: true
       matrix:
         node_versions: [24]
+        shard-index: [1,2,3]
+        shard-total: [3]
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout latest code"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Load & Cache Dependencies #Custom Action Loaded from Local
         uses: ./.github/actions/cached-deps # Path of the Custom Actions repo 
@@ -52,16 +69,17 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Run Playwright tests
-        env:
-          PLAYWRIGHT_SERVICE_URL: ${{ vars.PLAYWRIGHT_SERVICE_URL }}
-        run: npx playwright test --config=playwright.service.config.ts --workers= ${{ inputs.workers || 3}}
+      #  env:
+      #    PLAYWRIGHT_SERVICE_URL: ${{ vars.PLAYWRIGHT_SERVICE_URL }}
+      #  run: npx playwright test --config=playwright.service.config.ts --workers= ${{ inputs.workers || 3}}
+        run: npm run ${{ inputs.test_script || 'regression' }} --shard=${{ matrix.shard-index }}/${{ matrix.shard-total }}
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@v4.6.2
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report-${{ inputs.test_name }}-${{ github.run_number }}
-          path: playwright-report/
-          retention-days: 5
+          name: all-blob-reports-shard-${{ matrix.shard-index }}
+          path: blob-report/
+          retention-days: 7
 
   # Dummy deploy to reuse another workflow - using 'uses' and the relative path to the reusable YAML file.
   deploy:
@@ -70,11 +88,25 @@ jobs:
     with:
       artifact_name: playwright-report
 
+  # =======================================================
+  # JOB 2: Merge Blob Reports & Send Slack Notification
+  # =======================================================
   report:
+    name: Merge Reports & Notify
+    if: !cancelled()
     needs: [set-up_test, deploy]
-    if: ${{ failure() }}
     runs-on: ubuntu-latest
+
     steps:
-      - name: Deploy
-        run: |
-          echo "Deploying ${{ toJson(github) }}"
+      - name: Load & Cache Dependencies #Custom Action Loaded from Local
+        uses: ./.github/actions/cached-deps # Path of the Custom Actions repo 
+        with:
+          caching: 'true'
+        
+      # Download all blob artifacts uploaded by the test job shards
+      - name: Download Blob Reports
+        uses: actions/download-artifact@v4
+        with:
+          path: all-blob-reports
+          pattern: all-blob-reports-*
+          merge-multiple: true
