@@ -9,11 +9,12 @@
     "open-reports": "npx allure open ./allure-report",
     "pretest": "npm run clean:reports",
     "posttest": "npm run generate:reports && npm run open-reports",
+    "regression": "npx playwright test",
     "letsShop_PlaceOrder": "npx playwright test OrderProductTest",
     "bookAnEvent_test": "npx playwright test CreateAnEventTest",
     "groupTicketBooking_test": "npx playwright test GroupTicketBooking",
     "singleEventWithRefund_test": "npx playwright test SingleEventWithRefund",
-    "AzureTestsRegression": "npx playwright test --config=playwright.service.config.ts --workers=4"
+    "AzureTestsRegression": "npx playwright test --config=playwright.service.config.ts --workers=3"
   },
   "keywords": [],
   "author": "",
