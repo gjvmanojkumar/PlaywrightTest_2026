@@ -59,7 +59,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Load & Cache Dependencies #Custom Action Loaded from Local
-        uses: ./.github/actions/cached-deps/action.yml # Path of the Custom Actions repo 
+        uses: ./.github/actions/cached-deps/ # Path of the Custom Actions repo 
         with:
           caching: 'true'
 
@@ -103,7 +103,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Load & Cache Dependencies #Custom Action Loaded from Local
-        uses: ./.github/actions/cached-deps/action.yml # Path of the Custom Actions repo 
+        uses: ./.github/actions/cached-deps/ # Path of the Custom Actions repo 
         with:
           caching: 'true'
           node-version: ${{ matrix.node_versions }}
