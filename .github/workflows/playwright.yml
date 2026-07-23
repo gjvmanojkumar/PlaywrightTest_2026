@@ -10,6 +10,7 @@ on:
       - "/Users/manojkanchana/PlaywrightTest_2026/.github/*"  #this will ignore triggering the event when a PR is raised just to update .github files (Here it's .yml)
   schedule:
     - cron: '0 0 * * 4'
+      timezone: 'Asia/Kolkata'
   workflow_dispatch:
     inputs:
       test_name:
