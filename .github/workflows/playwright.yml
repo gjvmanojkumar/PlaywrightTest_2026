@@ -60,7 +60,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Load & Cache Dependencies #Custom Action Loaded from Local
-        uses: ./.github/actions/cached-deps # Path of the Custom Actions repo 
+        uses: ./.github/actions/cached-deps/action.yml # Path of the Custom Actions repo 
         with:
           caching: 'true'
 
@@ -83,11 +83,11 @@ jobs:
           retention-days: 7
 
   # Dummy deploy to reuse another workflow - using 'uses' and the relative path to the reusable YAML file.
-  deploy:
-    needs: set-up_test
-    uses: ./.github/workflows/reusableWorkflow.yml
-    with:
-      artifact_name: all-blob-reports #playwright-report
+  #deploy:
+    #needs: set-up_test
+    #uses: ./.github/workflows/reusableWorkflow.yml
+    #with:
+      #artifact_name: all-blob-reports #playwright-report
 
   # =======================================================
   # JOB 2: Merge Blob Reports & Send Slack Notification
@@ -95,7 +95,7 @@ jobs:
   report:
     name: Merge Reports & Notify
     if: ${{ !cancelled() }}
-    needs: [set-up_test, deploy]
+    needs: set-up_test
     runs-on: ubuntu-latest
 
     steps:
