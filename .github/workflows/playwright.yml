@@ -115,3 +115,16 @@ jobs:
           path: all-blob-reports
           pattern: all-blob-reports-*
           merge-multiple: true
+
+      # Step 2 — Merge blobs into single HTML report
+      - name: Merge Playwright Reports
+        run: npx playwright merge-reports --reporter=html ./all-blob-reports
+
+      # Step 3 — Upload merged HTML report as artifact
+      - name: Upload Merged HTML Report
+        uses: actions/upload-artifact@v4.6.2
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-merged-report     # ← single merged report
+          path: playwright-report/
+          retention-days: 30
