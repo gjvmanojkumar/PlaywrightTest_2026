@@ -11,6 +11,7 @@ test.describe('Verify Event Eligible for Refund @EventHub', () => {
     })
 
     test('Check Result For Refund Eligibility', async ({ bookingConfirmationPage, eventDetailPage }) => {
+        //random comment
         // await test.step('Create an Event and Book', async () => {
         //     await eventDetailPage.createEvent(eventTitle, '50')
         //     await eventDetailPage.verifyCreatedEventExists(eventTitle, '50')
