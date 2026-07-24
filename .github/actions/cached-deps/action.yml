@@ -39,6 +39,6 @@ runs:
         key: playwright-browsers-${{ hashFiles('**/package-lock.json') }}
 
     - name: Install Playwright Browsers
-      if: steps.cache.outputs.cache-hit != 'true'
+      if: steps.browser-cache.outputs.cache-hit != 'true'
       run: npx playwright install --with-deps
       shell: bash
