@@ -26,7 +26,7 @@ export class EventDetailsPage {
 
     async verifyCreatedEventExists(eventTitle: string, totalSeats: string) {
         const seatsCount: number = await this.eventsPageHelper(eventTitle)
-        // await this.utils.verifyValuesOnly(seatsCount.toString(), totalSeats)
+        // await this.utils.verifyValuesOnly(seatsCount.toString(), totalSeats) Ignoring this
     }
 
     async eventsPageHelper(eventTitle: string) {
