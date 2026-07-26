@@ -10,7 +10,7 @@ test.describe('Verify Group Tickets Booking Is Not Eligible For Refund @EventHub
         await loginBookEvent.login()
     })
 
-    test('Check Result For Refund Eligibility', {tag: '@slow'}, async ({ bookingConfirmationPage, eventDetailPage }) => {
+    test('Check Result For Refund Eligibility @slow', async ({ bookingConfirmationPage, eventDetailPage }) => {
         // test.slow()
         
         await test.step('Fill Booking Form and Confirm Booking', async () => {

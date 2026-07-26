@@ -10,7 +10,7 @@ test.describe('Verify Event Eligible for Refund @EventHub', () => {
         await loginBookEvent.login()
     })
 
-    test('Check Result For Refund Eligibility', {tag: '@slow'}, async ({ bookingConfirmationPage, eventDetailPage }) => {
+    test('Check Result For Refund Eligibility @slow', async ({ bookingConfirmationPage, eventDetailPage }) => {
         //random comment again
         // await test.step('Create an Event and Book', async () => {
         //     await eventDetailPage.createEvent(eventTitle, '50')
