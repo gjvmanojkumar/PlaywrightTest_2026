@@ -37,7 +37,7 @@ jobs:
                 merge-multiple: true
 
            - name: Convert to HTML report
-             run: npx playwright --merge-report --reporter='html' ./all-blob-reports
+             run: npx playwright merge-reports --reporter=html ./all-blob-reports
 
            - name: Upload merged reports
              id: upload
@@ -46,4 +46,3 @@ jobs:
              with:
                 path: playwright-report/
                 retention-days: ${{ inputs.retentionDays }}
-                
