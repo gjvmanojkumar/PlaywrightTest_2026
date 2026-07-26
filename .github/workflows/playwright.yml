@@ -38,6 +38,8 @@ on:
           - bookAnEvent_test
           - singleEventWithRefund_test
           - groupTicketBooking_test
+#env:
+    #NODE_VERSION: '24' #To make node version available globally across all jobs, we defined under env.
 
 jobs:
 
@@ -50,7 +52,7 @@ jobs:
     strategy:
       # fail-fast: true
       matrix:
-        node_versions: [24]
+        # node_versions: [24]
         shard-index: [1,2,3]
         shard-total: [3]
     runs-on: ubuntu-latest
@@ -62,7 +64,8 @@ jobs:
         uses: ./.github/actions/cached-deps # Path of the Custom Actions repo 
         with:
           caching: 'true'
-          node-version: ${{ matrix.node_versions }}
+          # Read from repository vars context
+          node-version: ${{ vars.DEFAULT_NODE_VERSION }}
 
       - name: Azure Login
         uses: azure/login@v3
@@ -83,49 +86,14 @@ jobs:
           path: blob-report/
           retention-days: 7
 
-  # Dummy deploy to reuse another workflow - using 'uses' and the relative path to the reusable YAML file.
-  #deploy:
-    #needs: set-up_test
-    #uses: ./.github/workflows/reusableWorkflow.yml
-    #with:
-      #artifact_name: all-blob-reports #playwright-report
-
   # =======================================================
   # JOB 2: Merge Blob Reports & Send Slack Notification
   # =======================================================
   report:
-    name: Merge Reports & Notify
-    if: ${{ !cancelled() }}
     needs: set-up_test
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: "Checkout latest code"
-        uses: actions/checkout@v6
-
-      - name: Load & Cache Dependencies #Custom Action Loaded from Local
-        uses: ./.github/actions/cached-deps/ # Path of the Custom Actions repo 
-        with:
-          caching: 'true'
-          node-version: ${{ matrix.node_versions }}
-        
-      # Download all blob artifacts uploaded by the test job shards
-      - name: Download Blob Reports
-        uses: actions/download-artifact@v7
-        with:
-          path: all-blob-reports
-          pattern: all-blob-reports-*
-          merge-multiple: true
-
-      # Step 2 — Merge blobs into single HTML report
-      - name: Merge Playwright Reports
-        run: npx playwright merge-reports --reporter=html ./all-blob-reports
-
-      # Step 3 — Upload merged HTML report as artifact
-      - name: Upload Merged HTML Report
-        uses: actions/upload-artifact@v4.6.2
-        if: ${{ !cancelled() }}
-        with:
-          name: playwright-merged-report     # ← single merged report
-          path: playwright-report/
-          retention-days: 30
+    if: ${{ !cancelled() }}
+    uses: ./.github/workflows/reusableWorkflow.yml
+    with:
+      artifact_name: 'all-blob-reports'
+      node-version: ${{ vars.DEFAULT_NODE_VERSION }}
+      retentionDays: 30
