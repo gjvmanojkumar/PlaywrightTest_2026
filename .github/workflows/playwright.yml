@@ -56,12 +56,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout latest code"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Load & Cache Dependencies #Custom Action Loaded from Local
-        uses: ./.github/actions/cached-deps/ # Path of the Custom Actions repo 
+        uses: ./.github/actions/cached-deps # Path of the Custom Actions repo 
         with:
           caching: 'true'
+          node-version: ${{ matrix.node_versions }}
 
       - name: Azure Login
         uses: azure/login@v3
@@ -100,7 +101,7 @@ jobs:
 
     steps:
       - name: "Checkout latest code"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Load & Cache Dependencies #Custom Action Loaded from Local
         uses: ./.github/actions/cached-deps/ # Path of the Custom Actions repo 
@@ -110,7 +111,7 @@ jobs:
         
       # Download all blob artifacts uploaded by the test job shards
       - name: Download Blob Reports
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           path: all-blob-reports
           pattern: all-blob-reports-*
