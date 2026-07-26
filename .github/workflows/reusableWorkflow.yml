@@ -1,21 +1,49 @@
-name: Deploy
+name: Reusable - Merge Reports & Notify
 on:  #We use workflow_call to make this workflow accessible in another workflows
     workflow_call:
         inputs:
             artifact_name:
-                description: The name of the deployable artifact file
+                description: 'Pattern for blob artifacts'
                 required: false
                 default: dist
                 type: string
+            node-version:
+                description: 'Define Node version'
+                required: true
+                type: string
+                default: '24'
+            retentionDays:
+                required: false
+                type: number
+                default: 30
+
+        outputs:
+            report-url:
+                description: 'Download URL of merged report'
+                value: ${{ jobs.merge-report.outputs.url }}
 jobs:
-    deploy:
+    merge-report:
         runs-on: ubuntu-latest
+        outputs:
+            url: ${{ steps.upload.outputs.artifact-url }}
         steps:
-            - name: Get Code
-              uses: actions/download-artifact@v7
-              with:
-                name: ${{ inputs.artifact_name }}
-            - name: List Files
-              run: ls
-            - name: Output info
-              run: echo "Deploying..."
+           - uses: actions/checkout@v6
+
+           - name: Download all blob reports
+             uses: actions/download-artifact@v7
+             with:
+                path: all-blob-reports/
+                pattern: ${{ inputs.artifact_name }}-*
+                merge-multiple: true
+
+           - name: Convert to HTML report
+             run: npx playwright --merge-report --reporter='html' ./all-blob-reports
+
+           - name: Upload merged reports
+             id: upload
+             uses: actions/upload-artifact@v4.6.2
+             if: ${{ !cancelled() }}
+             with:
+                path: playwright-report/
+                retention-days: ${{ inputs.retentionDays }}
+                
