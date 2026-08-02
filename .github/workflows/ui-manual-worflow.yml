@@ -43,7 +43,7 @@ jobs:
                 node-version: ${{ vars.DEFAULT_NODE_VERSION }}
 
             - name: Run Playwright Tests
-              run: npm run ${{ inputs.test_run || 'regression' }} -- --shard = ${{ matrix.shard-index }}/${{ matrix.shard-total }}
+              run: npm run ${{ inputs.test_run || 'regression' }} -- --shard=${{ matrix.shard-index }}/${{ matrix.shard-total }}
 
             - name: Upload Artifacts
               uses: actions/upload-artifact@v4.6.2
