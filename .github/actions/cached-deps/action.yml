@@ -36,7 +36,7 @@ runs:
       id: browser-cache
       with:
         path: ~/.cache/ms-playwright
-        key: playwright-browsers-${{ hashFiles('**/package-lock.json') }}
+        key: playwright-browsers-v2-${{ hashFiles('**/package-lock.json') }}
 
     - name: Install Playwright Browsers
       if: steps.browser-cache.outputs.cache-hit != 'true'
