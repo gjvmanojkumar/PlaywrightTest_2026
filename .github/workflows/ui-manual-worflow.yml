@@ -1,4 +1,7 @@
 name: Manual Workflow
+permissions:
+  contents: write
+  pages: write
 on:
     workflow_dispatch:
         inputs:
