@@ -34,6 +34,14 @@ jobs:
         shard-total: [3]
     runs-on: ubuntu-latest
     steps:
+      - uses: act10ns/slack@v2
+        with:
+          status: starting
+          channel: '#workflows'
+          message: Starting Playwright Test Run...
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
       - name: "Checkout latest code"
         uses: actions/checkout@v6
 
@@ -85,3 +93,13 @@ jobs:
           echo "Allure artifact : ${{ needs.report.outputs.allure-report-url }}"
           echo "HTML artifact   : ${{ needs.report.outputs.html-report-url }}"
           echo "Live Allure URL : ${{ needs.report.outputs.pages-url }}"
+
+      - name: Send Slack Notification
+        uses: act10ns/slack@v2
+        with:
+          status: ${{ needs.report.result }}
+          steps: ${{ toJson(steps) }}
+          channel: '#workflows'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
