@@ -29,6 +29,13 @@ jobs:
         steps:
            - uses: actions/checkout@v6
 
+           - name: Load & Cache Deps
+             uses: ./.github/actions/cached-deps
+             with:
+                path: all-blob-reports/
+                pattern: ${{ inputs.artifact_name }}-*
+                merge-multiple: true
+
            - name: Download all blob reports
              uses: actions/download-artifact@v7
              with:
@@ -46,7 +53,7 @@ jobs:
             #    path: playwright-report/
             #    retention-days: 7
 
-           # In reusableWorkflow.yml — after download blobs step
+            # Generating the Allure report from Blob reports generated
            - name: Merge into Allure Results
              run: npx playwright merge-reports --reporter=allure-playwright ./all-blob-reports
 
