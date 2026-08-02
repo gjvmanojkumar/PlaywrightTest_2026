@@ -25,7 +25,7 @@ test.describe('Book An Event', { tag: ['@EventHub', '@Regression'] }, () => {
         await bookingConfirmationPage.fillBookingForm(eventTitle)
         const refID: string = await bookingConfirmationPage.verifyBookingConfirmation()
         await bookingConfirmationPage.verifyInMyBooking(refID, eventTitle)
-        // await bookingConfirmationPage.verifySeatReduction(eventDetailPage, apiRequest, eventTitle, totalSeats
+        // await bookingConfirmationPage.verifySeatReduction(eventDetailPage, apiRequest, eventTitle, totalSeats)
     })
     test.afterAll('Close All', async ({browser}) => {
         const contexts = browser.contexts();
