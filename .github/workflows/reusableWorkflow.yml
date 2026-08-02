@@ -46,7 +46,7 @@ jobs:
             #    path: playwright-report/
             #    retention-days: 7
 
-           # In reusableWorkflow.yml — after download blobs step
+            # Generating the Allure report from Blob reports generated
            - name: Merge into Allure Results
              run: npx playwright merge-reports --reporter=allure-playwright ./all-blob-reports
 
