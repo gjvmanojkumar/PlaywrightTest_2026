@@ -1,0 +1,2 @@
+Broken links or images are: https://the-internet.herokuapp.com/asdf.jpg
+Broken links or images are: https://the-internet.herokuapp.com/hjkl.jpg
