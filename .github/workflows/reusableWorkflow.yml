@@ -18,14 +18,21 @@ on:  #We use workflow_call to make this workflow accessible in another workflows
                 default: 30
 
         outputs:
-            report-url:
-                description: 'Download URL of merged report'
-                value: ${{ jobs.merge-report.outputs.url }}
+            allure-report-url:                                        # ① workflow output — Allure
+                description: 'Artifact URL of Allure report'
+                value: ${{ jobs.merge-report.outputs.allure-url }}
+            html-report-url:                                          # ② workflow output — HTML
+                description: 'Artifact URL of HTML report'
+                value: ${{ jobs.merge-report.outputs.html-url }}
+            pages-url:                                                # ③ workflow output — live Pages URL
+                description: 'Live GitHub Pages URL'
+                value: 'https://gjvmanojkumar.github.io/PlaywrightTest_2026/latest/'
 jobs:
     merge-report:
         runs-on: ubuntu-latest
         outputs:
-            url: ${{ steps.allure-upload.outputs.artifact-url }}
+            allure-url: ${{ steps.allure-upload.outputs.artifact-url }}
+            html-url:   ${{ steps.html-upload.outputs.artifact-url }}
         steps:
            - uses: actions/checkout@v4
              with:
@@ -44,15 +51,15 @@ jobs:
                 pattern: ${{ inputs.artifact_name }}-*
                 merge-multiple: true
 
-           #- name: Convert to HTML report
-            # run: npx playwright merge-reports --reporter=html ./all-blob-reports
+           - name: Convert to HTML report
+             run: npx playwright merge-reports --reporter=html ./all-blob-reports
 
-           #- name: Upload merged reports
-            # id: upload
-            # uses: actions/upload-artifact@v4.6.2
-            # with:
-            #    path: playwright-report/
-            #    retention-days: 7
+           - name: Upload merged reports
+             id: html-upload
+             uses: actions/upload-artifact@v4.6.2
+             with:
+                path: playwright-report/
+                retention-days: 7
 
             # Generating the Allure report from Blob reports generated
            - name: Merge into Allure Results

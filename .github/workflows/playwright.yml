@@ -74,3 +74,14 @@ jobs:
       artifact_name: 'all-blob-reports'
       node-version: ${{ vars.DEFAULT_NODE_VERSION }}
       retentionDays: 30
+
+  notify:
+    needs: report
+    runs-on: ubuntu-latest
+    if: ${{ !cancelled() }}
+    steps:
+      - name: Print report URLs
+        run: |
+          echo "Allure artifact : ${{ needs.report.outputs.allure-report-url }}"
+          echo "HTML artifact   : ${{ needs.report.outputs.html-report-url }}"
+          echo "Live Allure URL : ${{ needs.report.outputs.pages-url }}"
