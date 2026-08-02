@@ -46,3 +46,17 @@ jobs:
              with:
                 path: playwright-report/
                 retention-days: ${{ inputs.retentionDays }}
+
+           - name: Upload to Microsoft Playwright Portal
+             uses: microsoft/playwright-github-action@v1
+             with:
+                github-token: ${{ secrets.GITHUB_TOKEN }}
+
+           - name: Upload to Allure TestOps
+             run: |
+                npx allure generate ./allure-results --clean
+           # upload to Allure TestOps via their CLI
+             env:
+                ALLURE_ENDPOINT: ${{ secrets.ALLURE_ENDPOINT }}
+                ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
+                ALLURE_PROJECT_ID: ${{ secrets.ALLURE_PROJECT_ID }}
