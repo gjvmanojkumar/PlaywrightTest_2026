@@ -27,12 +27,25 @@ on:  #We use workflow_call to make this workflow accessible in another workflows
             pages-url:                                                # ③ workflow output — live Pages URL
                 description: 'Live GitHub Pages URL'
                 value: 'https://gjvmanojkumar.github.io/PlaywrightTest_2026/latest/'
+            passed:                                                  
+                value: ${{ jobs.merge-report.outputs.passed }}
+            failed:                                                  
+                value: ${{ jobs.merge-report.outputs.failed }}
+            skipped:                                                 
+                value: ${{ jobs.merge-report.outputs.skipped }}
+            total:                                                   
+                value: ${{ jobs.merge-report.outputs.total }}
+
 jobs:
     merge-report:
         runs-on: ubuntu-latest
         outputs:
             allure-url: ${{ steps.allure-upload.outputs.artifact-url }}
-            html-url:   ${{ steps.html-upload.outputs.artifact-url }}
+            html-url: ${{ steps.html-upload.outputs.artifact-url }}
+            passed: ${{ steps.counts.outputs.passed }}
+            failed: ${{ steps.counts.outputs.failed }}
+            skipped: ${{ steps.counts.outputs.skipped }}
+            total: ${{ steps.counts.outputs.total }}
         steps:
            - uses: actions/checkout@v4
              with:
@@ -50,6 +63,23 @@ jobs:
                 path: all-blob-reports/
                 pattern: ${{ inputs.artifact_name }}-*
                 merge-multiple: true
+
+           - name: Merge test result counts for slack
+             id: counts
+             run: |
+                PASSED=0
+                FAILED=0
+                SKIPPED=0
+                for f in test-results/*.json; do
+                    PASSED=$((PASSED + $(jq '.stats.expected' $f)))
+                    FAILED=$((FAILED + $(jq '.stats.unexpected' $f)))
+                    SKIPPED=$((SKIPPED + $(jq '.stats.skipped' $f)))
+                done
+                TOTAL=$((PASSED + FAILED + SKIPPED))
+                echo "passed=$PASSED"   >> $GITHUB_OUTPUT
+                echo "failed=$FAILED"   >> $GITHUB_OUTPUT
+                echo "skipped=$SKIPPED" >> $GITHUB_OUTPUT
+                echo "total=$TOTAL"     >> $GITHUB_OUTPUT 
 
            - name: Convert to HTML report
              run: npx playwright merge-reports --reporter=html ./all-blob-reports
