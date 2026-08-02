@@ -46,11 +46,11 @@ Test timeout of 30000ms exceeded.
         - link "My Bookings" [ref=e25]:
           - /url: /bookings
         - generic [ref=e26]: /
-        - generic [ref=e27]: T-FGE87N
+        - generic [ref=e27]: T-Y6EEKS
       - generic [ref=e28]:
         - generic [ref=e29]:
           - generic [ref=e30]:
-            - generic [ref=e31]: T-FGE87N
+            - generic [ref=e31]: T-Y6EEKS
             - generic [ref=e32]: confirmed
           - heading "Tech Summit 2026" [level=1] [ref=e33]
         - button "Cancel Booking" [ref=e34] [cursor=pointer]
@@ -108,7 +108,7 @@ Test timeout of 30000ms exceeded.
               - generic [ref=e86]: Sunday 2 August, 2026
             - generic [ref=e87]:
               - generic [ref=e88]: Booking ID
-              - generic [ref=e89]: "#108290"
+              - generic [ref=e89]: "#109073"
       - link "← Back to My Bookings" [ref=e91]:
         - /url: /bookings
         - button "← Back to My Bookings" [ref=e92] [cursor=pointer]

@@ -1,0 +1,167 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: EventHub/SingleEventWithRefund.spec.ts >> Verify Event Eligible for Refund @EventHub >> Check Result For Refund Eligibility @slow
+- Location: tests/EventHub/SingleEventWithRefund.spec.ts:13:9
+
+# Error details
+
+```
+Test timeout of 30000ms exceeded.
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e4]:
+      - link "EventHub" [ref=e5]:
+        - /url: /
+        - img [ref=e7]
+        - generic [ref=e9]: EventHub
+      - generic [ref=e10]:
+        - link "Home" [ref=e11]:
+          - /url: /
+        - link "Events" [ref=e12]:
+          - /url: /events
+        - link "My Bookings" [ref=e13]:
+          - /url: /bookings
+        - link "API Docs" [ref=e14]:
+          - /url: https://api.eventhub.rahulshettyacademy.com/api/docs
+        - button "Admin" [ref=e16] [cursor=pointer]:
+          - text: Admin
+          - img [ref=e17]
+        - generic [ref=e19]:
+          - generic "bruceWayne1@gmail.com" [ref=e20]
+          - button "Logout" [ref=e21] [cursor=pointer]
+  - main [ref=e22]:
+    - generic [ref=e23]:
+      - navigation [ref=e24]:
+        - link "My Bookings" [ref=e25]:
+          - /url: /bookings
+        - generic [ref=e26]: /
+        - generic [ref=e27]: T-692Z2V
+      - generic [ref=e28]:
+        - generic [ref=e29]:
+          - generic [ref=e30]:
+            - generic [ref=e31]: T-692Z2V
+            - generic [ref=e32]: confirmed
+          - heading "Tech Summit 2026" [level=1] [ref=e33]
+        - button "Cancel Booking" [ref=e34] [cursor=pointer]
+      - generic [ref=e35]:
+        - generic [ref=e36]:
+          - heading "Event Details" [level=2] [ref=e37]
+          - generic [ref=e38]:
+            - generic [ref=e39]:
+              - generic [ref=e40]: Event
+              - generic [ref=e41]: Tech Summit 2026
+            - generic [ref=e42]:
+              - generic [ref=e43]: Category
+              - generic [ref=e44]: Conference
+            - generic [ref=e45]:
+              - generic [ref=e46]: Date
+              - generic [ref=e47]: Tuesday 1 September, 2026
+            - generic [ref=e48]:
+              - generic [ref=e49]: Venue
+              - generic [ref=e50]: Yashoda Gardens
+            - generic [ref=e51]:
+              - generic [ref=e52]: City
+              - generic [ref=e53]: Guntur
+        - generic [ref=e54]:
+          - heading "Customer Details" [level=2] [ref=e55]
+          - generic [ref=e56]:
+            - generic [ref=e57]:
+              - generic [ref=e58]: Name
+              - generic [ref=e59]: Sundhar
+            - generic [ref=e60]:
+              - generic [ref=e61]: Email
+              - generic [ref=e62]: brucewayne@gmail.com
+            - generic [ref=e63]:
+              - generic [ref=e64]: Phone
+              - generic [ref=e65]: "8992288111"
+        - generic [ref=e66]:
+          - heading "Payment Summary" [level=2] [ref=e67]
+          - generic [ref=e68]:
+            - generic [ref=e69]:
+              - generic [ref=e70]: Tickets
+              - generic [ref=e71]: "1"
+            - generic [ref=e72]:
+              - generic [ref=e73]: Price per ticket
+              - generic [ref=e74]: $600
+            - generic [ref=e75]:
+              - generic [ref=e76]: Total Paid
+              - generic [ref=e77]: $600
+        - generic [ref=e78]:
+          - heading "Refund" [level=2] [ref=e79]
+          - button "Check eligibility for refund?" [ref=e80] [cursor=pointer]
+        - generic [ref=e81]:
+          - heading "Booking Information" [level=2] [ref=e82]
+          - generic [ref=e83]:
+            - generic [ref=e84]:
+              - generic [ref=e85]: Booked on
+              - generic [ref=e86]: Sunday 2 August, 2026
+            - generic [ref=e87]:
+              - generic [ref=e88]: Booking ID
+              - generic [ref=e89]: "#109074"
+      - link "← Back to My Bookings" [ref=e91]:
+        - /url: /bookings
+        - button "← Back to My Bookings" [ref=e92] [cursor=pointer]
+  - contentinfo [ref=e93]:
+    - generic [ref=e94]:
+      - generic [ref=e95]:
+        - generic [ref=e96]:
+          - heading "Rahul Shetty Academy" [level=3] [ref=e97]
+          - paragraph [ref=e98]: India's leading QA automation training academy — empowering engineers to build real-world testing skills.
+        - generic [ref=e99]:
+          - heading "Popular Courses" [level=3] [ref=e100]
+          - list [ref=e101]:
+            - listitem [ref=e102]:
+              - link "Selenium WebDriver with Java" [ref=e103]:
+                - /url: https://rahulshettyacademy.com
+            - listitem [ref=e104]:
+              - link "Playwright with JavaScript" [ref=e105]:
+                - /url: https://rahulshettyacademy.com
+            - listitem [ref=e106]:
+              - link "RestAssured API Testing" [ref=e107]:
+                - /url: https://rahulshettyacademy.com
+            - listitem [ref=e108]:
+              - link "Cypress End-to-End Testing" [ref=e109]:
+                - /url: https://rahulshettyacademy.com
+            - listitem [ref=e110]:
+              - link "Appium Mobile Testing" [ref=e111]:
+                - /url: https://rahulshettyacademy.com
+        - generic [ref=e112]:
+          - heading "QA Job Hiring Platform" [level=3] [ref=e113]
+          - paragraph [ref=e114]: Get hired faster — take skill assessments trusted by top QA employers worldwide.
+          - link "techsmarthire.com →" [ref=e115]:
+            - /url: https://techsmarthire.com
+        - generic [ref=e116]:
+          - heading "EventHub Practice App" [level=3] [ref=e117]
+          - list [ref=e118]:
+            - listitem [ref=e119]:
+              - link "Browse Events" [ref=e120]:
+                - /url: /events
+            - listitem [ref=e121]:
+              - link "My Bookings" [ref=e122]:
+                - /url: /bookings
+            - listitem [ref=e123]:
+              - link "Manage Events" [ref=e124]:
+                - /url: /admin/events
+            - listitem [ref=e125]:
+              - link "API Documentation" [ref=e126]:
+                - /url: https://api.eventhub.rahulshettyacademy.com/api/docs
+      - generic [ref=e127]:
+        - paragraph [ref=e128]: © 2026 Rahul Shetty Academy. All rights reserved.
+        - generic [ref=e129]:
+          - link "rahulshettyacademy.com →" [ref=e130]:
+            - /url: https://rahulshettyacademy.com
+          - link "techsmarthire.com →" [ref=e131]:
+            - /url: https://techsmarthire.com
+  - alert [ref=e132]
+```
