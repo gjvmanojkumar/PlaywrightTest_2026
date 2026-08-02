@@ -100,18 +100,18 @@ jobs:
             - name: Notify Slack — Completed
               uses: act10ns/slack@v2
               with:
-                status: ${{ needs.report.result }}
+                status: ${{ needs.get-report.result }}
                 channel: '#workflows'
                 message: |
-                    ${{ needs.report.result == 'success' && '✅' || '❌' }} *Playwright Run #${{ github.run_number }}* — ${{ needs.report.result }}
+                    ${{ needs.get-report.result == 'success' && '✅' || '❌' }} *Playwright Run #${{ github.run_number }}* — ${{ needs.get-report.result }}
 
                     📊 *Test Results:*
-                    ✅ Passed  : ${{ needs.report.outputs.passed }}
-                    ❌ Failed  : ${{ needs.report.outputs.failed }}
-                    ⏭️ Skipped : ${{ needs.report.outputs.skipped }}
-                    📝 Total   : ${{ needs.report.outputs.total }}
+                    ✅ Passed  : ${{ needs.get-report.outputs.passed }}
+                    ❌ Failed  : ${{ needs.get-report.outputs.failed }}
+                    ⏭️ Skipped : ${{ needs.get-report.outputs.skipped }}
+                    📝 Total   : ${{ needs.get-report.outputs.total }}
 
-                    🔗 *Report:* ${{ needs.report.outputs.pages-url }}
+                    🔗 *Report:* ${{ needs.get-report.outputs.pages-url }}
                     🌿 *Branch:* ${{ github.ref_name }}
                     👤 *By:* ${{ github.actor }}
               env:
