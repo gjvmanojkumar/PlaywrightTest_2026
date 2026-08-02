@@ -1,4 +1,7 @@
 name: Reusable - Merge Reports & Notify
+permissions:
+    contents: write
+    pages: write
 on:  #We use workflow_call to make this workflow accessible in another workflows
     workflow_call:
         inputs:
@@ -28,6 +31,8 @@ jobs:
             url: ${{ steps.allure-upload.outputs.artifact-url }}
         steps:
            - uses: actions/checkout@v6
+             with:
+                persist-credentials: true
 
            - name: Load & Cache Deps
              uses: ./.github/actions/cached-deps
