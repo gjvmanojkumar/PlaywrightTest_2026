@@ -1,0 +1,63 @@
+name: Manual Workflow
+on:
+    workflow_dispatch:
+        inputs:
+            test_name:
+                description: 'Test name to run'
+                default: 'smoke'
+                required: true
+                type: string
+            parallel_workers:
+                description: 'Parallel workers'
+                required: false
+                default: 3
+                type: number
+            test_run:
+                description: 'Test script to run'
+                required: true
+                default: 'regression'
+                type: choice
+                options:
+                    - regression
+                    - letsShop_PlaceOrder
+                    - bookAnEvent_test
+                    - singleEventWithRefund_test
+                    - groupTicketBooking_test
+jobs:
+    setup_test:
+        timeout-minutes: 60
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                shard-index: [1,2,3]
+                shard-total: [3]
+        steps:
+            - name: Code Checkout
+              uses: actions/checkout@v6
+
+            - name: Load Cache Deps
+              uses: ./.github/actions/cached-deps
+              with:
+                caching: 'true'
+                node-version: ${{ vars.DEFAULT_NODE_VERSION }}
+
+            - name: Run Playwright Tests
+              run: npm run ${{ inputs.test_run || 'regression' }} -- --shard = ${{ matrix.shard-index }}/${{ matrix.shard-total }}
+
+            - name: Upload Artifacts
+              uses: actions/upload-artifact@v4.6.2
+              if: ${{ !cancelled() }}
+              with:
+                name: all-blob-reports-shard-${{ matrix.shard-index }}
+                path: blob-report/
+                retention-days: 7
+
+    get-report:
+        needs: setup_test
+        if: ${{ !cancelled() }}
+        uses: ./.github/workflows/reusableWorkflow.yml
+        with:
+            artifact_name: 'all-blob-reports'
+            node-version: ${{ vars.DEFAULT_NODE_VERSION }}
+            retentionDays: 30

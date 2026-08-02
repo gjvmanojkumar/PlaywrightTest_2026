@@ -10,34 +10,7 @@ on:
       - ".github/**"  #this will ignore triggering the event when a PR is raised just to update .github files (Here it's .yml)
   schedule:
     - cron: '30 18 * * 1,5'
-  workflow_dispatch:
-    inputs:
-      test_name:
-        description: 'Test name to run'
-        required: true
-        default: 'smoke'
-        type: string
-      run_allure:
-        description: 'Generate Allure Report?'
-        required: true
-        default: true
-        type: boolean
-      workers:
-        description: 'Parallel workers'
-        required: true
-        default: 3
-        type: number
-      test_script:
-        description: 'Test script to run'
-        required: true
-        default: 'regression'
-        type: choice
-        options:
-          - regression
-          - letsShop_PlaceOrder
-          - bookAnEvent_test
-          - singleEventWithRefund_test
-          - groupTicketBooking_test
+  
 #env:
     #NODE_VERSION: '24' #To make node version available globally across all jobs, we defined under env.
 
@@ -49,8 +22,9 @@ jobs:
   set-up_test:
     if: github.event.pull_request.merged == true
     timeout-minutes: 60
+    continue-on-error: true
     strategy:
-      # fail-fast: true
+      fail-fast: false
       matrix:
         # node_versions: [24]
         shard-index: [1,2,3]
