@@ -23,7 +23,13 @@ export default defineConfig({
   workers: process.env.CI ? 2 : undefined,
   failOnFlakyTests: true,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: process.env.CI? [['blob', { outputDir: 'blob-report' }], ['list']] : [['html', {open: 'on-failure'}], ['line']],
+  reporter: process.env.CI
+  ? [
+      ['blob', { outputDir: 'blob-report' }],
+      ['json', { outputFile: 'test-results.json' }],
+      ['line']
+    ]
+  : [['html', { open: 'on-failure' }], ['line'], ['allure-playwright']],
   timeout: 30000,  //30secs default timeout
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {

@@ -64,6 +64,19 @@ jobs:
       #  run: npx playwright test --config=playwright.service.config.ts --workers= ${{ inputs.workers || 3
         run: npm run regression -- --shard=${{ matrix.shard-index }}/${{ matrix.shard-total }}
 
+      - name: Extract test results
+        if: ${{ !cancelled() }}
+        run: |
+          PASSED=$(cat test-results.json | jq '.stats.expected')
+          FAILED=$(cat test-results.json | jq '.stats.unexpected')
+          SKIPPED=$(cat test-results.json | jq '.stats.skipped')
+          TOTAL=$(cat test-results.json | jq '.stats.expected + .stats.unexpected + .stats.skipped')
+          echo "passed=$PASSED"   >> $GITHUB_OUTPUT
+          echo "failed=$FAILED"   >> $GITHUB_OUTPUT
+          echo "skipped=$SKIPPED" >> $GITHUB_OUTPUT
+          echo "total=$TOTAL"     >> $GITHUB_OUTPUT
+        id: results
+
       - uses: actions/upload-artifact@v4.6.2
         if: ${{ !cancelled() }}
         with:
@@ -94,12 +107,23 @@ jobs:
           echo "HTML artifact   : ${{ needs.report.outputs.html-report-url }}"
           echo "Live Allure URL : ${{ needs.report.outputs.pages-url }}"
 
-      - name: Send Slack Notification
+      - name: Notify Slack — Completed
         uses: act10ns/slack@v2
         with:
           status: ${{ needs.report.result }}
-          steps: ${{ toJson(steps) }}
           channel: '#workflows'
+          message: |
+            ${{ needs.report.result == 'success' && '✅' || '❌' }} *Playwright Run #${{ github.run_number }}* — ${{ needs.report.result }}
+
+            📊 *Test Results:*
+            ✅ Passed  : ${{ needs.report.outputs.passed }}
+            ❌ Failed  : ${{ needs.report.outputs.failed }}
+            ⏭️ Skipped : ${{ needs.report.outputs.skipped }}
+            📝 Total   : ${{ needs.report.outputs.total }}
+
+            🔗 *Report:* ${{ needs.report.outputs.pages-url }}
+            🌿 *Branch:* ${{ github.ref_name }}
+            👤 *By:* ${{ github.actor }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
