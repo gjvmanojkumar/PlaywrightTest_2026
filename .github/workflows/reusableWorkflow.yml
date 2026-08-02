@@ -1,14 +1,11 @@
 name: Reusable - Merge Reports & Notify
-permissions:
-    contents: write
-    pages: write
 on:  #We use workflow_call to make this workflow accessible in another workflows
     workflow_call:
         inputs:
             artifact_name:
                 description: 'Pattern for blob artifacts'
                 required: false
-                default: dist
+                default: 'all-blob-reports'
                 type: string
             node-version:
                 description: 'Define Node version'
@@ -30,16 +27,15 @@ jobs:
         outputs:
             url: ${{ steps.allure-upload.outputs.artifact-url }}
         steps:
-           - uses: actions/checkout@v6
+           - uses: actions/checkout@v4
              with:
                 persist-credentials: true
 
            - name: Load & Cache Deps
              uses: ./.github/actions/cached-deps
              with:
-                path: all-blob-reports/
-                pattern: ${{ inputs.artifact_name }}-*
-                merge-multiple: true
+                caching: 'true'
+                node-version: ${{ inputs.node-version }}
 
            - name: Download all blob reports
              uses: actions/download-artifact@v7
