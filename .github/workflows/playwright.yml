@@ -64,19 +64,6 @@ jobs:
       #  run: npx playwright test --config=playwright.service.config.ts --workers= ${{ inputs.workers || 3
         run: npm run regression -- --shard=${{ matrix.shard-index }}/${{ matrix.shard-total }}
 
-      - name: Extract test results
-        if: ${{ !cancelled() }}
-        run: |
-          PASSED=$(cat test-results.json | jq '.stats.expected')
-          FAILED=$(cat test-results.json | jq '.stats.unexpected')
-          SKIPPED=$(cat test-results.json | jq '.stats.skipped')
-          TOTAL=$(cat test-results.json | jq '.stats.expected + .stats.unexpected + .stats.skipped')
-          echo "passed=$PASSED"   >> $GITHUB_OUTPUT
-          echo "failed=$FAILED"   >> $GITHUB_OUTPUT
-          echo "skipped=$SKIPPED" >> $GITHUB_OUTPUT
-          echo "total=$TOTAL"     >> $GITHUB_OUTPUT
-        id: results
-
       - uses: actions/upload-artifact@v4.6.2
         if: ${{ !cancelled() }}
         with:

@@ -26,7 +26,6 @@ export default defineConfig({
   reporter: process.env.CI
   ? [
       ['blob', { outputDir: 'blob-report' }],
-      ['json', { outputFile: 'test-results.json' }],
       ['line']
     ]
   : [['html', { open: 'on-failure' }], ['line'], ['allure-playwright']],
