@@ -1,0 +1,34 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: OrderProduct/OrderProductTest.spec.ts >> Place An Order >> @Web Verify Placing an Order
+- Location: tests/OrderProduct/OrderProductTest.spec.ts:25:9
+
+# Error details
+
+```
+Error: browserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /home/runner/.cache/ms-playwright/webkit-2311/pw_run.sh --inspector-pipe --headless --no-startup-window
+<launched> pid=2793
+[pid=2793][err] /home/runner/.cache/ms-playwright/webkit-2311/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libwoff2dec.so.1.0.2: cannot open shared object file: No such file or directory
+Call log:
+  - <launching> /home/runner/.cache/ms-playwright/webkit-2311/pw_run.sh --inspector-pipe --headless --no-startup-window
+  - <launched> pid=2793
+  - [pid=2793][err] /home/runner/.cache/ms-playwright/webkit-2311/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libwoff2dec.so.1.0.2: cannot open shared object file: No such file or directory
+  - [pid=2793] <gracefully close start>
+  - [pid=2793] <kill>
+  - [pid=2793] <will force kill>
+  - [pid=2793] exception while trying to kill process: Error: kill ESRCH
+  - [pid=2793] <process did exit: exitCode=127, signal=null>
+  - [pid=2793] starting temporary directories cleanup
+  - [pid=2793] finished temporary directories cleanup
+  - [pid=2793] <gracefully close end>
+
+```
