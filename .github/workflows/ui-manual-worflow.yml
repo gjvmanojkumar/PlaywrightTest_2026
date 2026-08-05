@@ -96,9 +96,10 @@ jobs:
                     ${{ needs.get-report.result == 'success' && '✅' || '❌' }} *Playwright Run #${{ github.run_number }}*
 
                     📊 *Test Results:*
+                    ##################
                     ✅ Passed  : ${{ needs.get-report.outputs.passed }}
                     ❌ Failed  : ${{ needs.get-report.outputs.failed }}
-                    🔴 Broken  : ${{ needs.get-report.outputs.broken }}
+                    ⚠️ Flaky  : ${{ needs.get-report.outputs.flaky }}
                     ⏭️ Skipped : ${{ needs.get-report.outputs.skipped }}
                     📝 Total   : ${{ needs.get-report.outputs.total }}
 
