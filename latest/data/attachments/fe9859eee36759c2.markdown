@@ -6,8 +6,8 @@
 
 # Test info
 
-- Name: EventHub/SingleEventWithRefund.spec.ts >> Verify Event Eligible for Refund @EventHub >> Check Result For Refund Eligibility @slow
-- Location: tests/EventHub/SingleEventWithRefund.spec.ts:13:9
+- Name: EventHub/GroupTicketBooking.spec.ts >> Verify Group Tickets Booking Is Not Eligible For Refund @EventHub >> Check Result For Refund Eligibility @slow
+- Location: tests/EventHub/GroupTicketBooking.spec.ts:13:9
 
 # Error details
 
@@ -46,11 +46,11 @@ Test timeout of 30000ms exceeded.
         - link "My Bookings" [ref=e25]:
           - /url: /bookings
         - generic [ref=e26]: /
-        - generic [ref=e27]: T-0IH641
+        - generic [ref=e27]: T-HWH25S
       - generic [ref=e28]:
         - generic [ref=e29]:
           - generic [ref=e30]:
-            - generic [ref=e31]: T-0IH641
+            - generic [ref=e31]: T-HWH25S
             - generic [ref=e32]: confirmed
           - heading "Tech Summit 2026" [level=1] [ref=e33]
         - button "Cancel Booking" [ref=e34] [cursor=pointer]
@@ -90,78 +90,82 @@ Test timeout of 30000ms exceeded.
           - generic [ref=e68]:
             - generic [ref=e69]:
               - generic [ref=e70]: Tickets
-              - generic [ref=e71]: "1"
+              - generic [ref=e71]: "3"
             - generic [ref=e72]:
               - generic [ref=e73]: Price per ticket
               - generic [ref=e74]: $600
             - generic [ref=e75]:
               - generic [ref=e76]: Total Paid
-              - generic [ref=e77]: $600
+              - generic [ref=e77]: $1,800
         - generic [ref=e78]:
           - heading "Refund" [level=2] [ref=e79]
-          - button "Check eligibility for refund?" [ref=e80] [cursor=pointer]
-        - generic [ref=e81]:
-          - heading "Booking Information" [level=2] [ref=e82]
-          - generic [ref=e83]:
-            - generic [ref=e84]:
-              - generic [ref=e85]: Booked on
-              - generic [ref=e86]: Wednesday 5 August, 2026
-            - generic [ref=e87]:
-              - generic [ref=e88]: Booking ID
-              - generic [ref=e89]: "#111481"
-      - link "← Back to My Bookings" [ref=e91]:
+          - generic [ref=e80]:
+            - img [ref=e81]
+            - generic [ref=e83]:
+              - strong [ref=e84]: Not eligible for refund.
+              - text: Group bookings (3 tickets) are non-refundable.
+        - generic [ref=e85]:
+          - heading "Booking Information" [level=2] [ref=e86]
+          - generic [ref=e87]:
+            - generic [ref=e88]:
+              - generic [ref=e89]: Booked on
+              - generic [ref=e90]: Wednesday 5 August, 2026
+            - generic [ref=e91]:
+              - generic [ref=e92]: Booking ID
+              - generic [ref=e93]: "#111505"
+      - link "← Back to My Bookings" [ref=e95]:
         - /url: /bookings
-        - button "← Back to My Bookings" [ref=e92] [cursor=pointer]
-  - contentinfo [ref=e93]:
-    - generic [ref=e94]:
-      - generic [ref=e95]:
-        - generic [ref=e96]:
-          - heading "Rahul Shetty Academy" [level=3] [ref=e97]
-          - paragraph [ref=e98]: India's leading QA automation training academy — empowering engineers to build real-world testing skills.
-        - generic [ref=e99]:
-          - heading "Popular Courses" [level=3] [ref=e100]
-          - list [ref=e101]:
-            - listitem [ref=e102]:
-              - link "Selenium WebDriver with Java" [ref=e103]:
-                - /url: https://rahulshettyacademy.com
-            - listitem [ref=e104]:
-              - link "Playwright with JavaScript" [ref=e105]:
-                - /url: https://rahulshettyacademy.com
+        - button "← Back to My Bookings" [ref=e96] [cursor=pointer]
+  - contentinfo [ref=e97]:
+    - generic [ref=e98]:
+      - generic [ref=e99]:
+        - generic [ref=e100]:
+          - heading "Rahul Shetty Academy" [level=3] [ref=e101]
+          - paragraph [ref=e102]: India's leading QA automation training academy — empowering engineers to build real-world testing skills.
+        - generic [ref=e103]:
+          - heading "Popular Courses" [level=3] [ref=e104]
+          - list [ref=e105]:
             - listitem [ref=e106]:
-              - link "RestAssured API Testing" [ref=e107]:
+              - link "Selenium WebDriver with Java" [ref=e107]:
                 - /url: https://rahulshettyacademy.com
             - listitem [ref=e108]:
-              - link "Cypress End-to-End Testing" [ref=e109]:
+              - link "Playwright with JavaScript" [ref=e109]:
                 - /url: https://rahulshettyacademy.com
             - listitem [ref=e110]:
-              - link "Appium Mobile Testing" [ref=e111]:
+              - link "RestAssured API Testing" [ref=e111]:
                 - /url: https://rahulshettyacademy.com
-        - generic [ref=e112]:
-          - heading "QA Job Hiring Platform" [level=3] [ref=e113]
-          - paragraph [ref=e114]: Get hired faster — take skill assessments trusted by top QA employers worldwide.
-          - link "techsmarthire.com →" [ref=e115]:
-            - /url: https://techsmarthire.com
+            - listitem [ref=e112]:
+              - link "Cypress End-to-End Testing" [ref=e113]:
+                - /url: https://rahulshettyacademy.com
+            - listitem [ref=e114]:
+              - link "Appium Mobile Testing" [ref=e115]:
+                - /url: https://rahulshettyacademy.com
         - generic [ref=e116]:
-          - heading "EventHub Practice App" [level=3] [ref=e117]
-          - list [ref=e118]:
-            - listitem [ref=e119]:
-              - link "Browse Events" [ref=e120]:
-                - /url: /events
-            - listitem [ref=e121]:
-              - link "My Bookings" [ref=e122]:
-                - /url: /bookings
-            - listitem [ref=e123]:
-              - link "Manage Events" [ref=e124]:
-                - /url: /admin/events
-            - listitem [ref=e125]:
-              - link "API Documentation" [ref=e126]:
-                - /url: https://api.eventhub.rahulshettyacademy.com/api/docs
-      - generic [ref=e127]:
-        - paragraph [ref=e128]: © 2026 Rahul Shetty Academy. All rights reserved.
-        - generic [ref=e129]:
-          - link "rahulshettyacademy.com →" [ref=e130]:
-            - /url: https://rahulshettyacademy.com
-          - link "techsmarthire.com →" [ref=e131]:
+          - heading "QA Job Hiring Platform" [level=3] [ref=e117]
+          - paragraph [ref=e118]: Get hired faster — take skill assessments trusted by top QA employers worldwide.
+          - link "techsmarthire.com →" [ref=e119]:
             - /url: https://techsmarthire.com
-  - alert [ref=e132]
+        - generic [ref=e120]:
+          - heading "EventHub Practice App" [level=3] [ref=e121]
+          - list [ref=e122]:
+            - listitem [ref=e123]:
+              - link "Browse Events" [ref=e124]:
+                - /url: /events
+            - listitem [ref=e125]:
+              - link "My Bookings" [ref=e126]:
+                - /url: /bookings
+            - listitem [ref=e127]:
+              - link "Manage Events" [ref=e128]:
+                - /url: /admin/events
+            - listitem [ref=e129]:
+              - link "API Documentation" [ref=e130]:
+                - /url: https://api.eventhub.rahulshettyacademy.com/api/docs
+      - generic [ref=e131]:
+        - paragraph [ref=e132]: © 2026 Rahul Shetty Academy. All rights reserved.
+        - generic [ref=e133]:
+          - link "rahulshettyacademy.com →" [ref=e134]:
+            - /url: https://rahulshettyacademy.com
+          - link "techsmarthire.com →" [ref=e135]:
+            - /url: https://techsmarthire.com
+  - alert [ref=e136]
 ```

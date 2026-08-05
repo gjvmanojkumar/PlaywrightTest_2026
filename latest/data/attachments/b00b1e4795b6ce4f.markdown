@@ -1,0 +1,323 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: EventHub/SingleEventWithRefund.spec.ts >> Verify Event Eligible for Refund @EventHub >> Check Result For Refund Eligibility @slow
+- Location: tests/EventHub/SingleEventWithRefund.spec.ts:13:9
+
+# Error details
+
+```
+Test timeout of 30000ms exceeded.
+```
+
+```
+Error: expect(locator).toBeVisible() failed
+
+Locator: locator('#refund-result').first()
+Expected: visible
+Error: element(s) not found
+
+Call log:
+  - Expect "toBeVisible" with timeout 100000ms
+  - waiting for locator('#refund-result').first()
+
+```
+
+```yaml
+- navigation:
+  - link "EventHub":
+    - /url: /
+    - img
+    - text: EventHub
+  - link "Home":
+    - /url: /
+  - link "Events":
+    - /url: /events
+  - link "My Bookings":
+    - /url: /bookings
+  - link "API Docs":
+    - /url: https://api.eventhub.rahulshettyacademy.com/api/docs
+  - button "Admin":
+    - text: Admin
+    - img
+  - text: bruceWayne1@gmail.com
+  - button "Logout"
+- main:
+  - navigation:
+    - link "My Bookings":
+      - /url: /bookings
+    - text: / T-T7HQGN
+  - text: T-T7HQGN confirmed
+  - heading "Tech Summit 2026" [level=1]
+  - button "Cancel Booking"
+  - heading "Event Details" [level=2]
+  - text: Event Tech Summit 2026 Category Conference Date Friday 4 September, 2026 Venue Yashoda Gardens City Guntur
+  - heading "Customer Details" [level=2]
+  - text: Name Sundhar Email brucewayne@gmail.com Phone 8992288111
+  - heading "Payment Summary" [level=2]
+  - text: Tickets 1 Price per ticket $600 Total Paid $600
+  - heading "Refund" [level=2]
+  - status "Loading"
+  - text: Checking your refund eligibility…
+  - heading "Booking Information" [level=2]
+  - text: "Booked on Wednesday 5 August, 2026 Booking ID #111502"
+  - link "← Back to My Bookings":
+    - /url: /bookings
+    - button "← Back to My Bookings"
+- contentinfo:
+  - heading "Rahul Shetty Academy" [level=3]
+  - paragraph: India's leading QA automation training academy — empowering engineers to build real-world testing skills.
+  - heading "Popular Courses" [level=3]
+  - list:
+    - listitem:
+      - link "Selenium WebDriver with Java":
+        - /url: https://rahulshettyacademy.com
+    - listitem:
+      - link "Playwright with JavaScript":
+        - /url: https://rahulshettyacademy.com
+    - listitem:
+      - link "RestAssured API Testing":
+        - /url: https://rahulshettyacademy.com
+    - listitem:
+      - link "Cypress End-to-End Testing":
+        - /url: https://rahulshettyacademy.com
+    - listitem:
+      - link "Appium Mobile Testing":
+        - /url: https://rahulshettyacademy.com
+  - heading "QA Job Hiring Platform" [level=3]
+  - paragraph: Get hired faster — take skill assessments trusted by top QA employers worldwide.
+  - link "techsmarthire.com →":
+    - /url: https://techsmarthire.com
+  - heading "EventHub Practice App" [level=3]
+  - list:
+    - listitem:
+      - link "Browse Events":
+        - /url: /events
+    - listitem:
+      - link "My Bookings":
+        - /url: /bookings
+    - listitem:
+      - link "Manage Events":
+        - /url: /admin/events
+    - listitem:
+      - link "API Documentation":
+        - /url: https://api.eventhub.rahulshettyacademy.com/api/docs
+  - paragraph: © 2026 Rahul Shetty Academy. All rights reserved.
+  - link "rahulshettyacademy.com →":
+    - /url: https://rahulshettyacademy.com
+  - link "techsmarthire.com →":
+    - /url: https://techsmarthire.com
+- alert
+```
+
+# Test source
+
+```ts
+  62  |                 break
+  63  |         }
+  64  |     }
+  65  | 
+  66  |     /* Use to add some delay after perform some actions*/
+  67  |     async delay(time: number): Promise<void> {
+  68  |         return new Promise(function (resolve) {
+  69  |             setTimeout(resolve, time);
+  70  |         })
+  71  |     }
+  72  | 
+  73  |     async pausePage() {
+  74  |         await this.page.pause()
+  75  |     }
+  76  | 
+  77  |     toLocator(selectorOrLocator: string | Locator): Locator {
+  78  |         return typeof selectorOrLocator === 'string' 
+  79  |             ? this.page.locator(selectorOrLocator) 
+  80  |             : selectorOrLocator;
+  81  |     }
+  82  | 
+  83  |     /* Use to click on element */
+  84  |     async clickEle(selectorOrLocator: string | Locator): Promise<void> {
+  85  |         const locator = this.toLocator(selectorOrLocator)
+  86  |         await locator.scrollIntoViewIfNeeded()
+  87  |         await locator.click()
+  88  |     }
+  89  | 
+  90  |     // Use to fill a text element
+  91  |     async enterEleText(selectorOrLocator: string | Locator, value: string): Promise<void> {
+  92  |         const locator = this.toLocator(selectorOrLocator)
+  93  |         await locator.fill(value)
+  94  |     }
+  95  | 
+  96  |     async getInnerText(selectorOrLocator: string | Locator) {
+  97  |         const locator = this.toLocator(selectorOrLocator)
+  98  |         return await locator.innerText()
+  99  |     }
+  100 | 
+  101 |     // Use to drag & drop
+  102 |     async dragDrop(dragEleLocator: string, dropEleLocator: string): Promise<void> {
+  103 |         await this.waitForEleAttached(dragEleLocator)
+  104 |         await this.waitForEleAttached(dropEleLocator)
+  105 |         await this.page.dragAndDrop(dragEleLocator, dropEleLocator)
+  106 |     }
+  107 | 
+  108 |     /* Use to select option from dropdown */
+  109 |     async selectOptionFromDropdown(locator: string, option: string): Promise<void> {
+  110 |         await this.waitForEleAttached(locator)
+  111 |         const dropdownLoc = await this.findLocator(locator)
+  112 |         await dropdownLoc.selectOption(option)
+  113 |     }
+  114 | 
+  115 |     /* Use to select options from dropdown */
+  116 |     async selectOptionsFromDropdown(locator: string, options: string[]): Promise<void> {
+  117 |         await this.waitForEleAttached(locator)
+  118 |         for (const option of options) {
+  119 |             await this.page.locator(locator).filter({ hasText: option }).click()
+  120 |         }
+  121 |     }
+  122 | 
+  123 |     // Use to verify element text
+  124 |     async verifyEleText(locator: string, expectedVal: string): Promise<void> {
+  125 |         await this.waitForEleAttached(locator)
+  126 |         const actualVal: Locator = this.page.locator(locator)
+  127 |         await expect(actualVal).toHaveText(expectedVal)
+  128 |     }
+  129 | 
+  130 |     // Use to verify element matched partial text
+  131 |     async verifyEleContainsText(locator: string, text: string): Promise<void> {
+  132 |         await this.waitForEleAttached(locator)
+  133 |         await this.page.locator(locator).waitFor({state: 'visible'})
+  134 |         await expect(this.page.locator(locator)).toContainText(text)
+  135 |     }
+  136 | 
+  137 |     /* use to validate element attribute */
+  138 |     async verifyEleAttribute(locator: string, attribute: string, value: string): Promise<void> {
+  139 |         await this.waitForEleAttached(locator)
+  140 |         const textValue: string = await this.page.getAttribute(locator, attribute) ?? ''
+  141 |         expect(textValue.trim()).toBe(value)
+  142 |     }
+  143 | 
+  144 |     async verifyTextVal(locator: Locator, value: string) {
+  145 |         const actualVal: string = await locator.textContent() ?? ''
+  146 |         expect(actualVal).toBe(value)
+  147 |     }
+  148 | 
+  149 |     async verifyValuesOnly(actualValue: string, expectedValue: string) {
+  150 |         expect(actualValue).toBe(expectedValue)
+  151 |     }
+  152 | 
+  153 |     /* Use to validate element attribute contains partial text */
+  154 |     async verifyAttributeByPartialMatch(locator: string, attribute: string, value: string): Promise<void> {
+  155 |         await this.waitForEleAttached(locator)
+  156 |         const textValue: string = await this.page.getAttribute(locator, attribute) ?? ''
+  157 |         expect(textValue).toContain(value)
+  158 |     }
+  159 | 
+  160 |     /* Use to check is element visible or not */
+  161 |     async verifyEleIsVisible(locator: string): Promise<void> {
+> 162 |         await expect(this.page.locator(locator).first()).toBeVisible({ timeout: waitForEle })
+      |                                                          ^ Error: expect(locator).toBeVisible() failed
+  163 | 
+  164 |     }
+  165 | 
+  166 |     /* Use to check is element enabled or not */
+  167 |     async verifyEleIsEnabled(locator: string, errorMessage: string): Promise<void> {
+  168 |         await expect(this.page.locator(locator)).toBeEnabled()
+  169 | 
+  170 |     }
+  171 | 
+  172 |     // Use to get user input from a text element
+  173 |     async getEleText(locator: string, value: string): Promise<void> {
+  174 |         await this.waitForEleAttached(locator)
+  175 |         const textValue: string = await this.page.locator(locator).inputValue()
+  176 |         expect(textValue).toBe(value)
+  177 |     }
+  178 | 
+  179 |     // Use to enter text sequentially
+  180 |     async enterEleTextSequentially(locator: string, value: string): Promise<void> {
+  181 |         await this.waitForEleAttached(locator)
+  182 |         await this.page.locator(locator).pressSequentially(value, { 'delay': 5 })
+  183 |     }
+  184 | 
+  185 |     async enterEleTextByPlaceholder(locator: string, value: string): Promise<void> {
+  186 |         await this.page.getByPlaceholder(locator).fill(value)
+  187 |     }
+  188 | 
+  189 |     async enterEleTextByLabel(locator: string, value: string): Promise<void> {
+  190 |         await this.page.getByLabel(locator).fill(value)
+  191 |     }
+  192 | 
+  193 |     //Use to get text content of a locator by removing trailing spaces
+  194 |     async getText(locator: string): Promise<string> {
+  195 |         await this.waitForEleAttached(locator)
+  196 |         const textVal: string = (await this.page.locator(locator).textContent()) ?? ''.trim()
+  197 |         return textVal
+  198 |     }
+  199 | 
+  200 |     //Use to get text content of a locator by removing all the spaces
+  201 |     async getTextByRemovingSpaces(locator: string): Promise<string> {
+  202 |         await this.waitForEleAttached(locator)
+  203 |         const textVal: string = (await this.page.locator(locator).textContent()) ?? ''.replace('/\s+/g', '')
+  204 |         return textVal
+  205 |     }
+  206 | 
+  207 |     /* returns YYYY-MM-DD format date converted from string format */
+  208 |     // async convertDateToISOFormat(locator: string): Promise<any> {
+  209 |     //     await this.waitForEleAttached(locator);
+  210 |     //     const dateString = await this.page.locator(locator).textContent();
+  211 |     //     const dateObj = moment(dateString, 'MMMM DD, YYYY');
+  212 |     //     const formattedDate = dateObj.format('YYYY-MM-DD');
+  213 |     //     return formattedDate;
+  214 |     // }
+  215 | 
+  216 |     /* Use to check if the element is not visible */
+  217 |     async verifyElementIsNotVisible(locator: string): Promise<void> {
+  218 |         const isVisible: boolean = await this.page.locator(locator).isVisible();
+  219 |         expect(isVisible).toBeFalsy();
+  220 |     }
+  221 | 
+  222 |     /* Use to validate element value */
+  223 |     async verifyElementHasValue(locator: string, value: string): Promise<void> {
+  224 |         await this.waitForEleAttached(locator);
+  225 |         const textValue = this.page.locator(locator);
+  226 |         expect(textValue).toHaveValue(value);
+  227 |     }
+  228 | 
+  229 |     /* Use to check if the element is not checked */
+  230 |     async verifyEleIsChecked(locator: string, errorMessage: string): Promise<void> {
+  231 |         const isChecked: boolean = await this.page.locator(locator).isChecked();
+  232 |         expect(isChecked).toBeTruthy();
+  233 |     }
+  234 | 
+  235 |     /* Use to check if the element is not checked */
+  236 |     async verifyEleIsNotChecked(locator: string, errorMessage: string): Promise<void> {
+  237 |         const isChecked: boolean = await this.page.locator(locator).isChecked();
+  238 |         expect(isChecked).toBeFalsy();
+  239 |     }
+  240 | 
+  241 |     // Use to get count of the elements
+  242 |     async getCount(locator: string): Promise<number> {
+  243 |         await this.waitForEleAttached(locator);
+  244 |         let count: number = await this.page.locator(locator).count();
+  245 |         return count;
+  246 |     }
+  247 | 
+  248 |     /* Use to check is element visible and returns the status */
+  249 |     async returnEleVisibilityStatus(locator: string): Promise<boolean> {
+  250 |         const flag: boolean = await this.page.locator(locator).isVisible();
+  251 |         return flag;
+  252 |     }
+  253 | 
+  254 |     async handleAlert(alertValue: string): Promise<void> {
+  255 |         alertValue = alertValue.toLowerCase()
+  256 |         if (alertValue == 'accept') {
+  257 |             this.page.on('dialog', async (alert) => {
+  258 |                 await alert.accept()
+  259 |             })
+  260 |         } else {
+  261 |             this.page.on('dialog', async (alert) => {
+  262 |                 await alert.dismiss()
+```
