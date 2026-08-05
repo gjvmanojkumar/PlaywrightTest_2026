@@ -1,0 +1,239 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: EventHub/SingleEventWithRefund.spec.ts >> Verify Event Eligible for Refund @EventHub >> Check Result For Refund Eligibility @slow
+- Location: tests/EventHub/SingleEventWithRefund.spec.ts:13:9
+
+# Error details
+
+```
+Error: expect(locator).toHaveText(expected) failed
+
+Locator:  locator('div h1')
+Expected: "Tech Summit 2026"
+Received: "Upcoming Events"
+Timeout:  5000ms
+
+Call log:
+  - Expect "toHaveText" with timeout 5000ms
+  - waiting for locator('div h1')
+    14 × locator resolved to <h1 class="text-3xl font-bold text-gray-900">Upcoming Events</h1>
+       - unexpected value "Upcoming Events"
+
+```
+
+```yaml
+- heading "Upcoming Events" [level=1]
+```
+
+# Test source
+
+```ts
+  27  | 
+  28  |     async waitForFirstEle(locator: string): Promise<void> {
+  29  |         await this.page.locator(locator).first().waitFor()
+  30  |     }
+  31  | 
+  32  |     async findLocator(locator: string): Promise<Locator> {
+  33  |         return this.page.locator(locator)
+  34  |     }
+  35  | 
+  36  |     /* Use to wait till page navigated successfully with mentioned waitUntil*/
+  37  |     async waitForPageNavigation(event: string): Promise<void> {
+  38  |         switch (event) {
+  39  |             case 'networkIdle':
+  40  |                 await this.page.waitForNavigation({ 'waitUntil': 'networkidle', timeout: waitForEle })
+  41  |                 break
+  42  |             case 'load':
+  43  |                 await this.page.waitForNavigation({ 'waitUntil': 'load', timeout: waitForEle })
+  44  |                 break
+  45  |             case 'domContentLoaded':
+  46  |                 await this.page.waitForNavigation({ 'waitUntil': 'domcontentloaded', timeout: waitForEle })
+  47  |                 break
+  48  |         }
+  49  |     }
+  50  | 
+  51  |     /* Use to wait till page content loaded successfully with mentioned waitUntil*/
+  52  |     async waitForPageToLoad(event: string): Promise<void> {
+  53  |         switch (event.toLowerCase()) {
+  54  |             case 'networkIdle':
+  55  |                 await this.page.waitForLoadState('networkidle', { timeout: waitForEle })
+  56  |                 break
+  57  |             case 'load':
+  58  |                 await this.page.waitForLoadState('load', { timeout: waitForEle })
+  59  |                 break
+  60  |             case 'domContentLoaded':
+  61  |                 await this.page.waitForLoadState('domcontentloaded', { timeout: waitForEle })
+  62  |                 break
+  63  |         }
+  64  |     }
+  65  | 
+  66  |     /* Use to add some delay after perform some actions*/
+  67  |     async delay(time: number): Promise<void> {
+  68  |         return new Promise(function (resolve) {
+  69  |             setTimeout(resolve, time);
+  70  |         })
+  71  |     }
+  72  | 
+  73  |     async pausePage() {
+  74  |         await this.page.pause()
+  75  |     }
+  76  | 
+  77  |     toLocator(selectorOrLocator: string | Locator): Locator {
+  78  |         return typeof selectorOrLocator === 'string' 
+  79  |             ? this.page.locator(selectorOrLocator) 
+  80  |             : selectorOrLocator;
+  81  |     }
+  82  | 
+  83  |     /* Use to click on element */
+  84  |     async clickEle(selectorOrLocator: string | Locator): Promise<void> {
+  85  |         const locator = this.toLocator(selectorOrLocator)
+  86  |         await locator.scrollIntoViewIfNeeded()
+  87  |         await locator.click()
+  88  |     }
+  89  | 
+  90  |     // Use to fill a text element
+  91  |     async enterEleText(selectorOrLocator: string | Locator, value: string): Promise<void> {
+  92  |         const locator = this.toLocator(selectorOrLocator)
+  93  |         await locator.fill(value)
+  94  |     }
+  95  | 
+  96  |     async getInnerText(selectorOrLocator: string | Locator) {
+  97  |         const locator = this.toLocator(selectorOrLocator)
+  98  |         return await locator.innerText()
+  99  |     }
+  100 | 
+  101 |     // Use to drag & drop
+  102 |     async dragDrop(dragEleLocator: string, dropEleLocator: string): Promise<void> {
+  103 |         await this.waitForEleAttached(dragEleLocator)
+  104 |         await this.waitForEleAttached(dropEleLocator)
+  105 |         await this.page.dragAndDrop(dragEleLocator, dropEleLocator)
+  106 |     }
+  107 | 
+  108 |     /* Use to select option from dropdown */
+  109 |     async selectOptionFromDropdown(locator: string, option: string): Promise<void> {
+  110 |         await this.waitForEleAttached(locator)
+  111 |         const dropdownLoc = await this.findLocator(locator)
+  112 |         await dropdownLoc.selectOption(option)
+  113 |     }
+  114 | 
+  115 |     /* Use to select options from dropdown */
+  116 |     async selectOptionsFromDropdown(locator: string, options: string[]): Promise<void> {
+  117 |         await this.waitForEleAttached(locator)
+  118 |         for (const option of options) {
+  119 |             await this.page.locator(locator).filter({ hasText: option }).click()
+  120 |         }
+  121 |     }
+  122 | 
+  123 |     // Use to verify element text
+  124 |     async verifyEleText(locator: string, expectedVal: string): Promise<void> {
+  125 |         await this.waitForEleAttached(locator)
+  126 |         const actualVal: Locator = this.page.locator(locator)
+> 127 |         await expect(actualVal).toHaveText(expectedVal)
+      |                                 ^ Error: expect(locator).toHaveText(expected) failed
+  128 |     }
+  129 | 
+  130 |     // Use to verify element matched partial text
+  131 |     async verifyEleContainsText(locator: string, text: string): Promise<void> {
+  132 |         await this.waitForEleAttached(locator)
+  133 |         await this.page.locator(locator).waitFor({state: 'visible'})
+  134 |         await expect(this.page.locator(locator)).toContainText(text)
+  135 |     }
+  136 | 
+  137 |     /* use to validate element attribute */
+  138 |     async verifyEleAttribute(locator: string, attribute: string, value: string): Promise<void> {
+  139 |         await this.waitForEleAttached(locator)
+  140 |         const textValue: string = await this.page.getAttribute(locator, attribute) ?? ''
+  141 |         expect(textValue.trim()).toBe(value)
+  142 |     }
+  143 | 
+  144 |     async verifyTextVal(locator: Locator, value: string) {
+  145 |         const actualVal: string = await locator.textContent() ?? ''
+  146 |         expect(actualVal).toBe(value)
+  147 |     }
+  148 | 
+  149 |     async verifyValuesOnly(actualValue: string, expectedValue: string) {
+  150 |         expect(actualValue).toBe(expectedValue)
+  151 |     }
+  152 | 
+  153 |     /* Use to validate element attribute contains partial text */
+  154 |     async verifyAttributeByPartialMatch(locator: string, attribute: string, value: string): Promise<void> {
+  155 |         await this.waitForEleAttached(locator)
+  156 |         const textValue: string = await this.page.getAttribute(locator, attribute) ?? ''
+  157 |         expect(textValue).toContain(value)
+  158 |     }
+  159 | 
+  160 |     /* Use to check is element visible or not */
+  161 |     async verifyEleIsVisible(locator: string): Promise<void> {
+  162 |         await expect(this.page.locator(locator).first()).toBeVisible({ timeout: waitForEle })
+  163 | 
+  164 |     }
+  165 | 
+  166 |     /* Use to check is element enabled or not */
+  167 |     async verifyEleIsEnabled(locator: string, errorMessage: string): Promise<void> {
+  168 |         await expect(this.page.locator(locator)).toBeEnabled()
+  169 | 
+  170 |     }
+  171 | 
+  172 |     // Use to get user input from a text element
+  173 |     async getEleText(locator: string, value: string): Promise<void> {
+  174 |         await this.waitForEleAttached(locator)
+  175 |         const textValue: string = await this.page.locator(locator).inputValue()
+  176 |         expect(textValue).toBe(value)
+  177 |     }
+  178 | 
+  179 |     // Use to enter text sequentially
+  180 |     async enterEleTextSequentially(locator: string, value: string): Promise<void> {
+  181 |         await this.waitForEleAttached(locator)
+  182 |         await this.page.locator(locator).pressSequentially(value, { 'delay': 5 })
+  183 |     }
+  184 | 
+  185 |     async enterEleTextByPlaceholder(locator: string, value: string): Promise<void> {
+  186 |         await this.page.getByPlaceholder(locator).fill(value)
+  187 |     }
+  188 | 
+  189 |     async enterEleTextByLabel(locator: string, value: string): Promise<void> {
+  190 |         await this.page.getByLabel(locator).fill(value)
+  191 |     }
+  192 | 
+  193 |     //Use to get text content of a locator by removing trailing spaces
+  194 |     async getText(locator: string): Promise<string> {
+  195 |         await this.waitForEleAttached(locator)
+  196 |         const textVal: string = (await this.page.locator(locator).textContent()) ?? ''.trim()
+  197 |         return textVal
+  198 |     }
+  199 | 
+  200 |     //Use to get text content of a locator by removing all the spaces
+  201 |     async getTextByRemovingSpaces(locator: string): Promise<string> {
+  202 |         await this.waitForEleAttached(locator)
+  203 |         const textVal: string = (await this.page.locator(locator).textContent()) ?? ''.replace('/\s+/g', '')
+  204 |         return textVal
+  205 |     }
+  206 | 
+  207 |     /* returns YYYY-MM-DD format date converted from string format */
+  208 |     // async convertDateToISOFormat(locator: string): Promise<any> {
+  209 |     //     await this.waitForEleAttached(locator);
+  210 |     //     const dateString = await this.page.locator(locator).textContent();
+  211 |     //     const dateObj = moment(dateString, 'MMMM DD, YYYY');
+  212 |     //     const formattedDate = dateObj.format('YYYY-MM-DD');
+  213 |     //     return formattedDate;
+  214 |     // }
+  215 | 
+  216 |     /* Use to check if the element is not visible */
+  217 |     async verifyElementIsNotVisible(locator: string): Promise<void> {
+  218 |         const isVisible: boolean = await this.page.locator(locator).isVisible();
+  219 |         expect(isVisible).toBeFalsy();
+  220 |     }
+  221 | 
+  222 |     /* Use to validate element value */
+  223 |     async verifyElementHasValue(locator: string, value: string): Promise<void> {
+  224 |         await this.waitForEleAttached(locator);
+  225 |         const textValue = this.page.locator(locator);
+  226 |         expect(textValue).toHaveValue(value);
+  227 |     }
+```
