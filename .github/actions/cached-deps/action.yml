@@ -42,3 +42,8 @@ runs:
       if: steps.browser-cache.outputs.cache-hit != 'true'
       run: npx playwright install --with-deps
       shell: bash
+
+    - name: Install Playwright OS Dependencies on Cache Hit
+      if: steps.browser-cache.outputs.cache-hit == 'true'
+      run: npx playwright install-deps
+      shell: bash

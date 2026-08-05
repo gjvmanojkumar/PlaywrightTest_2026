@@ -14,8 +14,9 @@ on:
   schedule:
     - cron: '30 18 * * 1,5'
   
-#env:
+env:
     #NODE_VERSION: '24' #To make node version available globally across all jobs, we defined under env.
+    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
 jobs:
 
@@ -40,7 +41,7 @@ jobs:
           channel: '#workflows'
           message: Starting Playwright Test Run...
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL }}
 
       - name: "Checkout latest code"
         uses: actions/checkout@v6
@@ -112,5 +113,5 @@ jobs:
             🌿 *Branch:* ${{ github.ref_name }}
             👤 *By:* ${{ github.actor }}
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL }}
         if: always()

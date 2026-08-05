@@ -26,6 +26,9 @@ on:
                     - bookAnEvent_test
                     - singleEventWithRefund_test
                     - groupTicketBooking_test
+
+env:
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 jobs:
     setup_test:
         timeout-minutes: 60
@@ -42,7 +45,7 @@ jobs:
                 channel: '#workflows'
                 message: Starting Playwright Test Run...
               env:
-                SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+                SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL }}
 
             - name: Code Checkout
               uses: actions/checkout@v6
@@ -55,19 +58,6 @@ jobs:
 
             - name: Run Playwright Tests
               run: npm run ${{ inputs.test_run || 'regression' }} -- --shard=${{ matrix.shard-index }}/${{ matrix.shard-total }}
-
-            - name: Extract test results
-              if: ${{ !cancelled() }}
-              run: |
-                PASSED=$(cat test-results.json | jq '.stats.expected')
-                FAILED=$(cat test-results.json | jq '.stats.unexpected')
-                SKIPPED=$(cat test-results.json | jq '.stats.skipped')
-                TOTAL=$(cat test-results.json | jq '.stats.expected + .stats.unexpected + .stats.skipped')
-                echo "passed=$PASSED"   >> $GITHUB_OUTPUT
-                echo "failed=$FAILED"   >> $GITHUB_OUTPUT
-                echo "skipped=$SKIPPED" >> $GITHUB_OUTPUT
-                echo "total=$TOTAL"     >> $GITHUB_OUTPUT
-              id: results
 
             - name: Upload Artifacts
               uses: actions/upload-artifact@v4.6.2
@@ -115,5 +105,5 @@ jobs:
                     🌿 *Branch:* ${{ github.ref_name }}
                     👤 *By:* ${{ github.actor }}
               env:
-                SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+                SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL }}
               if: always()
