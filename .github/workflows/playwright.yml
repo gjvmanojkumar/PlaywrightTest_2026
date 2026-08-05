@@ -101,11 +101,12 @@ jobs:
           status: ${{ needs.report.result }}
           channel: '#workflows'
           message: |
-            ${{ needs.report.result == 'success' && '✅' || '❌' }} *Playwright Run #${{ github.run_number }}* — ${{ needs.report.result }}
+            ${{ needs.report.result == 'success' && '✅' || '❌' }} *Playwright Run #${{ github.run_number }}*
 
             📊 *Test Results:*
             ✅ Passed  : ${{ needs.report.outputs.passed }}
             ❌ Failed  : ${{ needs.report.outputs.failed }}
+            🔴 Broken  : ${{ needs.report.outputs.broken }}
             ⏭️ Skipped : ${{ needs.report.outputs.skipped }}
             📝 Total   : ${{ needs.report.outputs.total }}
 
