@@ -31,6 +31,8 @@ on:  #We use workflow_call to make this workflow accessible in another workflows
                 value: ${{ jobs.merge-report.outputs.passed }}
             failed:                                                  
                 value: ${{ jobs.merge-report.outputs.failed }}
+            flaky:
+                value: ${{ jobs.merge-report.outputs.flaky }}
             skipped:                                                 
                 value: ${{ jobs.merge-report.outputs.skipped }}
             total:                                                   
@@ -44,6 +46,7 @@ jobs:
             html-url: ${{ steps.html-upload.outputs.artifact-url }}
             passed: ${{ steps.counts.outputs.passed }}
             failed: ${{ steps.counts.outputs.failed }}
+            flaky: ${{ steps.counts.outputs.flaky }}
             skipped: ${{ steps.counts.outputs.skipped }}
             total: ${{ steps.counts.outputs.total }}
         steps:
@@ -78,18 +81,19 @@ jobs:
            - name: Merge into Allure Results
              run: npx playwright merge-reports --reporter=allure-playwright ./all-blob-reports
 
-           - name: Extract counts from Allure results
+           - name: Extract counts from HTML report
              id: counts
              run: |
-                PASSED=$(find ./allure-results -name "*.json" | xargs grep -l '"status":"passed"' | wc -l)
-                FAILED=$(find ./allure-results -name "*.json" | xargs grep -l '"status":"failed"' | wc -l)
-                SKIPPED=$(find ./allure-results -name "*.json" | xargs grep -l '"status":"skipped"' | wc -l)
-                BROKEN=$(find ./allure-results -name "*.json" | xargs grep -l '"status":"broken"' | wc -l)
-                TOTAL=$((PASSED + FAILED + SKIPPED + BROKEN))
+                REPORT="./playwright-report/report.json"
+                PASSED=$(jq '.stats.expected'   $REPORT 2>/dev/null || echo 0)
+                FAILED=$(jq '.stats.unexpected' $REPORT 2>/dev/null || echo 0)
+                FLAKY=$(jq '.stats.flaky'       $REPORT 2>/dev/null || echo 0)
+                SKIPPED=$(jq '.stats.skipped'   $REPORT 2>/dev/null || echo 0)
+                TOTAL=$(jq '.stats.total'       $REPORT 2>/dev/null || echo 0)
                 echo "passed=$PASSED"   >> $GITHUB_OUTPUT
                 echo "failed=$FAILED"   >> $GITHUB_OUTPUT
+                echo "flaky=$FLAKY"     >> $GITHUB_OUTPUT
                 echo "skipped=$SKIPPED" >> $GITHUB_OUTPUT
-                echo "broken=$BROKEN"   >> $GITHUB_OUTPUT
                 echo "total=$TOTAL"     >> $GITHUB_OUTPUT
 
            - name: Generate Allure HTML Report
